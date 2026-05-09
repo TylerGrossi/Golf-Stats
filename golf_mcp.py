@@ -15,18 +15,18 @@ BASE = os.environ.get(
 )
 
 # ── Load all data ─────────────────────────────────────────────────────────────
-xl = pd.ExcelFile(f"{BASE}\\Golf Stats Multiple Users.xlsx")
+xl = pd.ExcelFile(os.path.join(BASE, "Golf Stats Multiple Users.xlsx"))
 rounds_df   = xl.parse("Golf Scores")
 handicap_df = xl.parse("Handicap")
 range_df    = xl.parse("Range Stats")
 raps_df     = xl.parse("Rapsodo Course Stats")
 putt_log    = xl.parse("Putt Log")
 
-sg_df       = pd.read_excel(f"{BASE}\\strokes_gained_summary.xlsx", sheet_name="Round Summary")
-recs_df     = pd.read_excel(f"{BASE}\\golf_recommendations.xlsx",   sheet_name="Sheet1")
-club_ranges = pd.read_excel(f"{BASE}\\club_ranges.xlsx",            sheet_name="Sheet1")
-club_sel    = pd.read_excel(f"{BASE}\\club_selector.xlsx",          sheet_name="Sheet1")
-clutch_df   = pd.read_excel(f"{BASE}\\clutch_score_analysis.xlsx",  sheet_name="Sheet1")
+sg_df       = pd.read_excel(os.path.join(BASE, "strokes_gained_summary.xlsx"), sheet_name="Round Summary")
+recs_df     = pd.read_excel(os.path.join(BASE, "golf_recommendations.xlsx"),   sheet_name="Sheet1")
+club_ranges = pd.read_excel(os.path.join(BASE, "club_ranges.xlsx"),            sheet_name="Sheet1")
+club_sel    = pd.read_excel(os.path.join(BASE, "club_selector.xlsx"),          sheet_name="Sheet1")
+clutch_df   = pd.read_excel(os.path.join(BASE, "clutch_score_analysis.xlsx"),  sheet_name="Sheet1")
 
 # ── Clean dates ───────────────────────────────────────────────────────────────
 for df in [rounds_df, handicap_df, sg_df, clutch_df, range_df, putt_log]:
