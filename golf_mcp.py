@@ -7,7 +7,13 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import os, tempfile
 
-mcp = FastMCP("Golf Analytics")
+# HTTP bind settings are read here (not passed to run()). Railway sets PORT; bind all interfaces when PORT is set.
+_http_host = os.environ.get("FASTMCP_HOST") or (
+    "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
+)
+_http_port = int(os.environ.get("PORT", os.environ.get("FASTMCP_PORT", "8000")))
+
+mcp = FastMCP("Golf Analytics", host=_http_host, port=_http_port)
 
 BASE = os.environ.get(
     "GOLF_DATA_DIR",
@@ -580,5 +586,4 @@ def get_stat_correlations() -> str:
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    mcp.run(transport="streamable-http", port=port)
+    mcp.run(transport="streamable-http")
