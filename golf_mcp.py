@@ -9,9 +9,9 @@ import os, tempfile
 
 mcp = FastMCP("Golf Analytics")
 
-BASE = os.path.join(
-    os.path.expanduser("~"),
-    "Desktop", "Tyler", "OneDrive", "Projects", "Golf Stats"
+BASE = os.environ.get(
+    "GOLF_DATA_DIR",
+    os.path.join(os.path.expanduser("~"), "Desktop", "Tyler", "OneDrive", "Projects", "Golf Stats")
 )
 
 # ── Load all data ─────────────────────────────────────────────────────────────
@@ -580,4 +580,5 @@ def get_stat_correlations() -> str:
 
 
 if __name__ == "__main__":
-    mcp.run()
+    port = int(os.environ.get("PORT", 8000))
+    mcp.run(transport="streamable-http", host="0.0.0.0", port=port)
