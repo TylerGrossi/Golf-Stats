@@ -1,7 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(& \"C:\\\\Users\\\\Owner\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python312\\\\python.exe\" -m pip freeze | Where-Object { $_ -match \"fastmcp|mcp|pandas|numpy|matplotlib|openpyxl|xlrd|xlwt\" })"
+      "PowerShell(& \"C:\\\\Users\\\\Owner\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python312\\\\python.exe\" -m pip freeze | Where-Object { $_ -match \"fastmcp|mcp|pandas|numpy|matplotlib|openpyxl|xlrd|xlwt\" })",
+      "WebFetch(domain:x.com)",
+      "Bash(ls \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Tyler\\\\OneDrive\\\\Projects\\\\Prediction Markets\\\\\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Tyler\\\\OneDrive\\\\Projects\\\\Prediction Markets\\\\data\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Tyler\\\\OneDrive\\\\Projects\\\\Prediction Markets\\\\features\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Tyler\\\\OneDrive\\\\Projects\\\\Prediction Markets\\\\models\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Tyler\\\\OneDrive\\\\Projects\\\\Prediction Markets\\\\arbitrage\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Tyler\\\\OneDrive\\\\Projects\\\\Prediction Markets\\\\cache\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\Owner\\\\Desktop\\\\Tyler\\\\OneDrive\\\\Projects\\\\Prediction Markets\\\\models_saved\")",
+      "Bash(python -X utf8 probe_poly3.py)",
+      "Bash(python -X utf8 probe_poly4.py)",
+      "Bash(python -X utf8 probe_poly5.py)"
     ]
   }
 }
