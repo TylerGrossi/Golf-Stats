@@ -1,6 +1,12 @@
+# Pinned to the versions this project is actually running on (Python 3.14).
+# MCP server (golf_mcp.py)
 fastmcp==3.2.4
 mcp==1.27.0
-pandas==2.2.3
-numpy==2.2.3
-matplotlib==3.10.1
+pandas==2.3.3
+numpy==2.4.1
+matplotlib==3.10.8
 openpyxl==3.1.5
+scipy==1.17.0
+
+# Notebook only (Golf Analytics.ipynb)
+scikit-learn==1.8.0

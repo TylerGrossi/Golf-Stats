@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "golf": {
+      "command": "C:\\Python314\\python.exe",
+      "args": [
+        "-X",
+        "utf8",
+        "C:\\Users\\Owner\\Desktop\\Tyler\\OneDrive\\Projects\\Golf Stats\\golf_mcp.py"
+      ]
+    }
+  }
+}

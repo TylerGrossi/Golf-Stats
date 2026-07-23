@@ -1,0 +1,18 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+.ipynb_checkpoints/
+
+# Excel lock files — created whenever a workbook is open
+~$*.xlsx
+~$*.xlsm
+
+# Power BI temp/cache
+*.pbix.tmp
+.pbi/
+
+.DS_Store
+Thumbs.db

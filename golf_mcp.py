@@ -8,6 +8,8 @@ import matplotlib.dates as mdates
 import os, tempfile
 from scipy import stats as scipy_stats
 
+import paths
+
 # ── Server config ─────────────────────────────────────────────────────────────
 _http_host = os.environ.get("FASTMCP_HOST") or (
     "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
@@ -15,24 +17,21 @@ _http_host = os.environ.get("FASTMCP_HOST") or (
 _http_port = int(os.environ.get("PORT", os.environ.get("FASTMCP_PORT", "8000")))
 mcp = FastMCP("Golf Analytics", host=_http_host, port=_http_port)
 
-BASE = os.environ.get(
-    "GOLF_DATA_DIR",
-    os.path.join(os.path.expanduser("~"), "Desktop", "Tyler", "OneDrive", "Projects", "Golf Stats")
-)
-
 # ── Load all data ─────────────────────────────────────────────────────────────
-xl          = pd.ExcelFile(os.path.join(BASE, "Golf Stats Multiple Users.xlsx"))
+# Raw sheets and the derived files below all originate from Golf Stats.xlsx, so
+# tools that mix them describe the same set of rounds.
+xl          = pd.ExcelFile(paths.GOLF_STATS)
 rounds_df   = xl.parse("Golf Scores")
 handicap_df = xl.parse("Handicap")
 range_df    = xl.parse("Range Stats")
 raps_df     = xl.parse("Rapsodo Course Stats")
 putt_log    = xl.parse("Putt Log")
 
-sg_df       = pd.read_excel(os.path.join(BASE, "strokes_gained_summary.xlsx"), sheet_name="Round Summary")
-recs_df     = pd.read_excel(os.path.join(BASE, "golf_recommendations.xlsx"),   sheet_name="Sheet1")
-club_ranges = pd.read_excel(os.path.join(BASE, "club_ranges.xlsx"),            sheet_name="Sheet1")
-club_sel    = pd.read_excel(os.path.join(BASE, "club_selector.xlsx"),          sheet_name="Sheet1")
-clutch_df   = pd.read_excel(os.path.join(BASE, "clutch_score_analysis.xlsx"),  sheet_name="Sheet1")
+sg_df       = pd.read_excel(paths.STROKES_GAINED,  sheet_name="Round Summary")
+recs_df     = pd.read_excel(paths.RECOMMENDATIONS, sheet_name="Sheet1")
+club_ranges = pd.read_excel(paths.CLUB_RANGES,     sheet_name="Sheet1")
+club_sel    = pd.read_excel(paths.CLUB_SELECTOR,   sheet_name="Sheet1")
+clutch_df   = pd.read_excel(paths.CLUTCH_SCORES,   sheet_name="Sheet1")
 
 # ── Clean dates ───────────────────────────────────────────────────────────────
 for df in [rounds_df, handicap_df, sg_df, clutch_df, range_df, putt_log]:
@@ -637,7 +636,11 @@ def get_strokes_gained_summary(last_n_rounds: int = 10) -> str:
     lines = [f"Strokes Gained (last {last_n_rounds} rounds vs scratch):"]
     for col, label in labels.items():
         lines.append(f"  {label:<22} {avgs[col]:+.2f}")
-    lines.append(f"\nBiggest weakness: {labels[min(labels, key=lambda c: avgs[c])]} ({min(avgs.values()):+.2f})")
+    # Weakness is the worst *category* — SG_Total is their sum, and SG_T2G the sum of
+    # OTT/Approach/ARG, so neither is a candidate.
+    cats = ["SG_OTT", "SG_Approach", "SG_ARG", "SG_Putting"]
+    worst = min(cats, key=lambda c: avgs[c])
+    lines.append(f"\nBiggest weakness: {labels[worst]} ({avgs[worst]:+.2f})")
     return "\n".join(lines)
 
 
