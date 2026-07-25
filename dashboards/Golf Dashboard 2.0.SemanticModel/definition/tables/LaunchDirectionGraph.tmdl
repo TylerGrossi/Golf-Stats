@@ -1,0 +1,127 @@
+table LaunchDirectionGraph
+	isHidden
+	lineageTag: 2a3f9d26-8013-44a2-b75f-f5a0f9f3ea4e
+
+	column 'Club Type'
+		isHidden
+		lineageTag: e3b59987-5dc7-4e65-8cd9-2977425cb819
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Range Stats[Club Type]
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgLaunch
+		isHidden
+		lineageTag: f387fdb6-7400-4825-b00d-aed6cdc105e2
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [AvgLaunch]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PointOrder
+		isHidden
+		formatString: 0
+		lineageTag: 10691384-5eb4-4134-95b9-436191b32385
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [PointOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	column X
+		isHidden
+		lineageTag: 691fc265-3a24-4525-8799-2b052f500c61
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [X]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Y
+		isHidden
+		lineageTag: bc8199f0-d7f0-4e5d-b7ed-e845e30b7fb7
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Y]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Club
+		isHidden
+		lineageTag: 96a10d19-af80-43a1-a5ca-24d5ececf99a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Club]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Launch
+		isHidden
+		lineageTag: a5387d5f-38d6-4079-83aa-9807ad2f4bb3
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Launch]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Club Category' = ```
+			
+			SWITCH (
+			    TRUE(),
+			    [Club Type] = "d", "Driver",
+			    [Club Type] IN {"3w", "3h"}, "Fairway Woods",
+			    [Club Type] IN {"4i", "5i", "6i"}, "Long Irons",
+			    [Club Type] IN {"7i", "8i", "9i"}, "Short Irons",
+			    [Club Type] IN {"pw", "gw", "sw", "lw"}, "Wedges",
+			    "Other"
+			)
+			
+			```
+		isHidden
+		lineageTag: 173f109d-c543-4277-bc8d-035115446218
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LaunchDirectionGraph = calculated
+		mode: import
+		source = ```
+				
+				GENERATE (
+				    SUMMARIZE (
+				        'Range Stats',
+				        'Range Stats'[Club Type],
+				        "AvgLaunch", AVERAGE('Range Stats'[Launch Direction])
+				    ),
+				    UNION (
+				        ROW (
+				            "PointOrder", 1,
+				            "X", 0.0,
+				            "Y", 0.0,
+				            "Club", [Club Type],
+				            "Launch", [AvgLaunch]
+				        ),
+				        ROW (
+				            "PointOrder", 2,
+				            "X", [AvgLaunch],
+				            "Y", 1.0,
+				            "Club", [Club Type],
+				            "Launch", [AvgLaunch]
+				        )
+				    )
+				)
+				
+				```
+
+	annotation PBI_Id = 7db6133a410c45dfa9e449252e3e48c9
+

@@ -1,0 +1,43 @@
+table PerformanceMetrics
+	isHidden
+	lineageTag: 95cb0313-9679-4726-877a-eb53da231c56
+
+	column Feature
+		dataType: string
+		isHidden
+		lineageTag: f55c628c-8253-463f-8ad8-be344d3349f3
+		summarizeBy: none
+		sourceColumn: Feature
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Importance
+		dataType: double
+		isHidden
+		lineageTag: 08075d62-3a08-4222-8430-8c20db288d2f
+		summarizeBy: none
+		sourceColumn: Importance
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition PerformanceMetrics = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WckvMLCpPrCxW0lHSMzAztjC2NFGK1YlWCigtKQELmhgZGFlagsXcPYNAIqaGhsYG5kqxsQA=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Feature = _t, Importance = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Feature", type text}, {"Importance", type number}})
+				in
+				    #"Changed Type"
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

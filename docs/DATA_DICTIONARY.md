@@ -160,8 +160,8 @@ KMeans `clustered_rounds.xlsx`, whose `Cluster` ids drifted against hand-typed l
 | `UpDown%` | (Missed green **and** 1 putt) ÷ missed greens |
 | `TotalPutts` | Putts for the round |
 | `FwyOpps` / `GIRopps` / `UpDownOpps` | Denominators above — the sample behind each rate |
-| `z_Driving` / `z_Irons` / `z_ShortGame` / `z_Putting` | Standard deviations from **that golfer's own** mean. Putting is sign-flipped, so positive always means played well |
-| `Driving` / `Irons` / `ShortGame` / `Putting` | `On` / `Normal` / `Off` at \|z\| > 0.5 (`ON_OFF_SIGMA` in the cell) |
+| `z_Driving` / `z_Irons` / `z_Wedges` / `z_Putting` | Standard deviations from **that golfer's own** mean. Putting is sign-flipped, so positive always means played well |
+| `Driving` / `Irons` / `Wedges` / `Putting` | `On` / `Normal` / `Off` at \|z\| > 0.5 (`ON_OFF_SIGMA` in the cell) |
 | `BestArea` / `WorstArea` | Highest and lowest z that round |
 | `BaselineRounds` | Rounds behind this golfer's baseline — low counts make ratings twitchy |
 

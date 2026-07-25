@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "362b21fe1791c4adcd9a",
+  "position": {
+    "x": 1.5599919295136004,
+    "y": 25.436292189266297,
+    "z": 12000,
+    "height": 72.433894734322067,
+    "width": 216,
+    "tabOrder": 11000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Golf Stats",
+                    "textStyle": {
+                      "fontSize": "32pt",
+                      "color": "#8dc0e6"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "center"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "parentGroupName": "413270ec913e6f2b9037"
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg01GolfDashboard",
+  "displayName": "Golf Dashboard",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "352a9d177f2a7c12c8ff",
+      "target": "8935d0d075c4c831b936",
+      "type": "NoFilter"
+    },
+    {
+      "source": "352a9d177f2a7c12c8ff",
+      "target": "6c8fff5bb0493c7e451d",
+      "type": "NoFilter"
+    },
+    {
+      "source": "6c8fff5bb0493c7e451d",
+      "target": "8935d0d075c4c831b936",
+      "type": "NoFilter"
+    },
+    {
+      "source": "6c8fff5bb0493c7e451d",
+      "target": "352a9d177f2a7c12c8ff",
+      "type": "NoFilter"
+    },
+    {
+      "source": "8935d0d075c4c831b936",
+      "target": "352a9d177f2a7c12c8ff",
+      "type": "NoFilter"
+    },
+    {
+      "source": "8935d0d075c4c831b936",
+      "target": "6c8fff5bb0493c7e451d",
+      "type": "NoFilter"
+    }
+  ]
+}

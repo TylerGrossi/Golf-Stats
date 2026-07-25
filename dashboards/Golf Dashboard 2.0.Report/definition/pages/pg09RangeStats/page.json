@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg09RangeStats",
+  "displayName": "Range Stats",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "565b1b9ea1df80992601",
+      "target": "8fc41b5fa7e6e73ebb0a",
+      "type": "NoFilter"
+    },
+    {
+      "source": "565b1b9ea1df80992601",
+      "target": "523007f05ac64ce28e55",
+      "type": "NoFilter"
+    }
+  ]
+}

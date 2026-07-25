@@ -1,0 +1,274 @@
+table 'Range Stats'
+	lineageTag: beef78f5-454f-47bf-a2ab-81fb946edcb1
+
+	measure 'Average Launch Angle' = ```
+			AVERAGE('Range Stats'[Launch Angle])
+			
+			```
+		lineageTag: c4daacba-d899-4879-81b1-02ad604ac368
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Club Type'
+		dataType: string
+		lineageTag: 361efdbb-9fdb-4e76-87f4-441695439239
+		summarizeBy: none
+		sourceColumn: Club Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Brand'
+		dataType: string
+		lineageTag: bd4d9a16-812f-4069-9564-b34819612804
+		summarizeBy: none
+		sourceColumn: Club Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Model'
+		dataType: string
+		lineageTag: 02501b89-8706-468e-b5c5-27c9bc54f579
+		summarizeBy: none
+		sourceColumn: Club Model
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Carry Distance'
+		dataType: double
+		formatString: 0
+		lineageTag: 7dcec81e-88b0-4de4-8a90-de8b72c1b9b8
+		summarizeBy: none
+		sourceColumn: Carry Distance
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column 'Total Distance'
+		dataType: double
+		lineageTag: 6a9ba037-ca08-4a87-b859-fa6b8f8618cd
+		summarizeBy: sum
+		sourceColumn: Total Distance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Ball Speed'
+		dataType: double
+		lineageTag: 555786d5-976a-45de-8aba-815666dc7b96
+		summarizeBy: sum
+		sourceColumn: Ball Speed
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Launch Angle'
+		dataType: double
+		lineageTag: ecc05fae-3d19-4125-911f-fe22fb9c8dd7
+		summarizeBy: sum
+		sourceColumn: Launch Angle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Launch Direction'
+		dataType: double
+		lineageTag: 271cb378-e561-493d-b464-f52b3103b353
+		summarizeBy: sum
+		sourceColumn: Launch Direction
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Apex
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a1b41f5-2713-4008-a02b-f6efa6b299c7
+		summarizeBy: sum
+		sourceColumn: Apex
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Side Carry'
+		dataType: double
+		lineageTag: ef4fabf5-81a6-4782-85f7-56dde6f8f776
+		summarizeBy: sum
+		sourceColumn: Side Carry
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Club Speed'
+		dataType: double
+		lineageTag: 031d2471-a120-4435-a1b1-c278d7b64387
+		summarizeBy: sum
+		sourceColumn: Club Speed
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Smash Factor'
+		dataType: double
+		lineageTag: 3d66fbdc-f445-4ebf-96c1-fac5eaf2ec6d
+		summarizeBy: sum
+		sourceColumn: Smash Factor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Descent Angle'
+		dataType: double
+		lineageTag: e53a4765-6284-4815-9e2c-ef035dc28abe
+		summarizeBy: sum
+		sourceColumn: Descent Angle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Club Group' = ```
+			
+			SWITCH(
+			    TRUE(),
+			    'Range Stats'[Club Type] IN {"4i", "5i", "6i"}, "Long Irons",
+			    'Range Stats'[Club Type] IN {"7i", "8i", "9i"}, "Mid Irons",
+			    'Range Stats'[Club Type] IN {"pw", "gw", "sw", "lw"}, "Wedges",
+			    'Range Stats'[Club Type] IN {"3w", "3h"}, "Woods",
+			    'Range Stats'[Club Type] IN {"d"}, "Driver",
+			    "Other"
+			)
+			
+			```
+		lineageTag: a305828e-91eb-46c5-933f-05517ccf49d6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: mmmm d\, yyyy
+		lineageTag: 21cf3afb-4d9b-41c3-abb8-539de263041a
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 6a2755c1-08bb-434d-bad5-776e1178e2aa
+			defaultHierarchy: LocalDateTable_f96572a3-679a-4643-9e56-ffc714fa7046.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column 'Smash Factor Gap' = ```
+			
+			VAR ClubType = 'Range Stats'[Club Type]
+			VAR IdealSmash =
+			    SWITCH(
+			        TRUE(),
+			        ClubType = "d", 1.48,
+			        ClubType = "3w", 1.46,
+			        ClubType = "3h", 1.44,
+			        ClubType = "4i", 1.41,
+			        ClubType = "5i", 1.4,
+			        ClubType = "6i", 1.39,
+			        ClubType = "7i", 1.38,
+			        ClubType = "8i", 1.36,
+			        ClubType = "9i", 1.35,
+			        ClubType = "pw", 1.3,
+			        ClubType = "gw", 1.28,
+			        ClubType = "sw", 1.27,
+			        ClubType = "lw", 1.26,
+			        BLANK()
+			    )
+			RETURN
+			ABS([Smash Factor] - IdealSmash)
+			
+			```
+		lineageTag: dfebf301-2057-489e-8da9-3b51c019abd0
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Golfer
+		dataType: string
+		lineageTag: 34f5f468-b615-4556-9bb3-fe2d1319be41
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Attack Angle'
+		dataType: string
+		lineageTag: 2c6c0a1d-624f-4973-87af-15ea85776646
+		summarizeBy: none
+		sourceColumn: Attack Angle
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Path'
+		dataType: string
+		lineageTag: 8f05cc1e-746c-4472-b2a4-70686f97df5d
+		summarizeBy: none
+		sourceColumn: Club Path
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Data Est Type'
+		dataType: string
+		lineageTag: a6f8ddec-5928-4419-ba99-f05e9e344b8d
+		summarizeBy: none
+		sourceColumn: Club Data Est Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Spin Rate'
+		dataType: string
+		lineageTag: d62a72b2-3d59-4e79-896a-0db1c2826929
+		summarizeBy: none
+		sourceColumn: Spin Rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Spin Axis'
+		dataType: string
+		lineageTag: 7c881da3-8580-4613-8aca-fd8833fcb5bf
+		summarizeBy: none
+		sourceColumn: Spin Axis
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Range Stats' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"Range Stats_Sheet" = Source{[Item="Range Stats",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Range Stats_Sheet", [PromoteAllScalars=true]),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Promoted Headers", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Blank Rows"),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Duplicates",{{"Date", type date}, {"Carry Distance", type number}, {"Total Distance", type number}, {"Ball Speed", type number}, {"Launch Angle", type number}, {"Launch Direction", type number}, {"Apex", type number}, {"Side Carry", type number}, {"Club Speed", type number}, {"Smash Factor", type number}, {"Descent Angle", type number}}),
+				    #"Removed Errors" = Table.RemoveRowsWithErrors(#"Changed Type", {"Date", "Club Type", "Club Brand", "Club Model", "Carry Distance", "Total Distance", "Ball Speed", "Launch Angle", "Launch Direction", "Apex", "Side Carry", "Club Speed", "Smash Factor", "Descent Angle"}),
+				    #"Removed Blank Rows1" = Table.SelectRows(#"Removed Errors", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Blank Rows1",{{"Club Type", type text}, {"Club Brand", type text}, {"Club Model", type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type1", each ([Club Type] <> null and [Club Type] <> "1i" and [Club Type] <> "Average" and [Club Type] <> "Std. Dev."))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

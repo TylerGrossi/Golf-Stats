@@ -1,0 +1,28 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
+  "pageOrder": [
+    "pg01GolfDashboard",
+    "pg02Overview",
+    "pg03Round",
+    "pgRoundProfiling",
+    "pg04Hole",
+    "pg05Putt",
+    "pg06Fairways",
+    "pg07GIR",
+    "pg08OnCourseTool",
+    "pg09RangeStats",
+    "pg10OnlineRoundStats",
+    "pg11Course",
+    "pg12Splits",
+    "pg13SmashFactor",
+    "pg14BallsHit",
+    "pg15LaunchAngle",
+    "pg16LaunchDirection",
+    "pg17Apex",
+    "pg18DescentAngle",
+    "pg19ClubSpeed",
+    "pg20BallSpeed",
+    "pg21DispersionMap"
+  ],
+  "activePageName": "pg01GolfDashboard"
+}

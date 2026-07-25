@@ -1,0 +1,236 @@
+table 'Putt Log by Hole'
+	lineageTag: 55b28b4e-2de0-4075-b17a-937931123fb5
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c01ad356-a086-4de4-8d48-297597f7af4b
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 75140010-5fb5-4f22-9cdd-903d36035db7
+			defaultHierarchy: LocalDateTable_eff1f61f-27ef-43c8-bd57-82bc851ea3c1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Course
+		dataType: string
+		lineageTag: df837588-f3bc-4920-ac77-d8e2fc6e3f19
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Putts
+		dataType: int64
+		formatString: 0
+		lineageTag: db902c15-828b-43a8-b870-e600a0719f6e
+		summarizeBy: none
+		sourceColumn: Putts
+
+		annotation SummarizationSetBy = User
+
+	column 1
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f04955d-9b55-4ca3-97c4-24fa62517652
+		summarizeBy: none
+		sourceColumn: 1
+
+		annotation SummarizationSetBy = User
+
+	column 2
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a327c0d-789b-480b-8c0f-7731ba53027d
+		summarizeBy: none
+		sourceColumn: 2
+
+		annotation SummarizationSetBy = User
+
+	column 3
+		dataType: int64
+		formatString: 0
+		lineageTag: b3c388a4-2a0f-419f-b09f-741ada93b34f
+		summarizeBy: none
+		sourceColumn: 3
+
+		annotation SummarizationSetBy = User
+
+	column 4
+		dataType: int64
+		formatString: 0
+		lineageTag: 1914e51d-cf48-4339-b017-4adf8d9df675
+		summarizeBy: none
+		sourceColumn: 4
+
+		annotation SummarizationSetBy = User
+
+	column 5
+		dataType: int64
+		formatString: 0
+		lineageTag: 1012ef39-dd70-4b23-9be2-caa7f59225c0
+		summarizeBy: none
+		sourceColumn: 5
+
+		annotation SummarizationSetBy = User
+
+	column 6
+		dataType: int64
+		formatString: 0
+		lineageTag: 7fbe4965-a695-49b1-9d9b-9b232e632d51
+		summarizeBy: none
+		sourceColumn: 6
+
+		annotation SummarizationSetBy = User
+
+	column 7
+		dataType: int64
+		formatString: 0
+		lineageTag: e43d09e1-a3e2-4117-88c2-8d769793fcb9
+		summarizeBy: none
+		sourceColumn: 7
+
+		annotation SummarizationSetBy = User
+
+	column 8
+		dataType: int64
+		formatString: 0
+		lineageTag: fbfbeba3-557d-4beb-b176-3e5bb65f8e48
+		summarizeBy: none
+		sourceColumn: 8
+
+		annotation SummarizationSetBy = User
+
+	column 9
+		dataType: int64
+		formatString: 0
+		lineageTag: 9e8c4e17-2c23-4cdd-a7a4-ebc9d88822fd
+		summarizeBy: none
+		sourceColumn: 9
+
+		annotation SummarizationSetBy = User
+
+	column 10
+		dataType: int64
+		formatString: 0
+		lineageTag: 297770c9-6f32-44c7-b961-106f8995f94b
+		summarizeBy: none
+		sourceColumn: 10
+
+		annotation SummarizationSetBy = User
+
+	column 11
+		dataType: int64
+		formatString: 0
+		lineageTag: 25d9a628-9f92-41f7-905f-f316ac8eea63
+		summarizeBy: none
+		sourceColumn: 11
+
+		annotation SummarizationSetBy = User
+
+	column 12
+		dataType: int64
+		formatString: 0
+		lineageTag: c34301de-981c-4944-b274-d650337177e1
+		summarizeBy: none
+		sourceColumn: 12
+
+		annotation SummarizationSetBy = User
+
+	column 13
+		dataType: int64
+		formatString: 0
+		lineageTag: e3186db6-a6ba-4a5f-841a-8dbed72a64df
+		summarizeBy: none
+		sourceColumn: 13
+
+		annotation SummarizationSetBy = User
+
+	column 14
+		dataType: int64
+		formatString: 0
+		lineageTag: 7ca7948e-bf1a-452a-b8c0-6ca5a82452e9
+		summarizeBy: none
+		sourceColumn: 14
+
+		annotation SummarizationSetBy = User
+
+	column 15
+		dataType: int64
+		formatString: 0
+		lineageTag: a2660ac9-f344-4cff-89e2-f3b673971aa0
+		summarizeBy: none
+		sourceColumn: 15
+
+		annotation SummarizationSetBy = User
+
+	column 16
+		dataType: int64
+		formatString: 0
+		lineageTag: 084a172f-1830-4b40-ad58-ebde51bc3871
+		summarizeBy: none
+		sourceColumn: 16
+
+		annotation SummarizationSetBy = User
+
+	column 17
+		dataType: int64
+		formatString: 0
+		lineageTag: e099e087-dd91-48d0-8c8e-831697401616
+		summarizeBy: none
+		sourceColumn: 17
+
+		annotation SummarizationSetBy = User
+
+	column 18
+		dataType: int64
+		formatString: 0
+		lineageTag: d054444a-af35-484d-bcfa-e34091936903
+		summarizeBy: none
+		sourceColumn: 18
+
+		annotation SummarizationSetBy = User
+
+	column RoundKey
+		dataType: string
+		lineageTag: e5511440-3909-42d0-bb49-1919d2d92020
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Golfer
+		dataType: string
+		lineageTag: 32ec95cd-8a8c-47bb-85d4-e7953fa3ded5
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Putt Log by Hole' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"Putt Log_Sheet" = Source{[Item="Putt Log",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Putt Log_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type any}, {"Course", type text}, {"Putts", type any}, {"Hole 1", type any}, {"Hole 2", type any}, {"Hole 3", type any}, {"Hole 4", type any}, {"Hole 5", type any}, {"Hole 6", type any}, {"Hole 7", type any}, {"Hole 8", type any}, {"Hole 9", type any}, {"Hole 10", Int64.Type}, {"Hole 11", Int64.Type}, {"Hole 12", Int64.Type}, {"Hole 13", Int64.Type}, {"Hole 14", Int64.Type}, {"Hole 15", Int64.Type}, {"Hole 16", Int64.Type}, {"Hole 17", Int64.Type}, {"Hole 18", Int64.Type}, {"Putts2", Int64.Type}, {"Fairways", Int64.Type}, {"GIR", Int64.Type}, {"Par 3 Avg", type number}, {"Par 4 Avg", type number}, {"Par 5 Avg", type number}}),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(#"Changed Type",3),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Removed Bottom Rows", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Removed Columns" = Table.RemoveColumns(#"Removed Blank Rows",{"Putts2", "Fairways", "GIR", "Par 3 Avg", "Par 4 Avg", "Par 5 Avg"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Hole 1", "1"}, {"Hole 2", "2"}, {"Hole 3", "3"}, {"Hole 4", "4"}, {"Hole 5", "5"}, {"Hole 6", "6"}, {"Hole 7", "7"}, {"Hole 8", "8"}, {"Hole 9", "9"}, {"Hole 10", "10"}, {"Hole 11", "11"}, {"Hole 12", "12"}, {"Hole 13", "13"}, {"Hole 14", "14"}, {"Hole 15", "15"}, {"Hole 16", "16"}, {"Hole 17", "17"}, {"Hole 18", "18"}}),
+				    #"Added Custom" = Table.AddColumn(#"Renamed Columns","RoundKey",each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course]),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Added Custom",{{"1", "1"}, {"2", "2"}, {"3", "3"}, {"4", "4"}, {"5", "5"}, {"6", "6"}, {"7", "7"}, {"8", "8"}, {"9", "9"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Date", type date}, {"Putts", Int64.Type}, {"1", Int64.Type}, {"2", Int64.Type}, {"3", Int64.Type}, {"4", Int64.Type}, {"5", Int64.Type}, {"6", Int64.Type}, {"7", Int64.Type}, {"8", Int64.Type}, {"9", Int64.Type}, {"10", Int64.Type}, {"11", Int64.Type}, {"12", Int64.Type}, {"13", Int64.Type}, {"14", Int64.Type}, {"15", Int64.Type}, {"16", Int64.Type}, {"17", Int64.Type}, {"18", Int64.Type}, {"RoundKey", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

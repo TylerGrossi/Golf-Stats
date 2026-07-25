@@ -1,0 +1,72 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
+  "position": {
+    "x": 4,
+    "y": 384,
+    "z": 12000,
+    "height": 95,
+    "width": 196,
+    "tabOrder": 12000
+  },
+  "objects": {
+    "grid": [],
+    "columnHeaders": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "values": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "columnFormatting": [],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "114.05990510892661D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.Short Course"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "61.204730178472026D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Sum(GIR Log.GIR %)"
+        }
+      }
+    ],
+    "total": []
+  }
+}

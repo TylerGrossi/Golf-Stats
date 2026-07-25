@@ -1,0 +1,208 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg12Splits",
+  "displayName": "Golf Splits",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "70077570a4491519c6d9",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Golf Scores"
+              }
+            },
+            "Property": "Par"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "g",
+              "Entity": "Golf Scores",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Not": {
+                  "Expression": {
+                    "In": {
+                      "Expressions": [
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "g"
+                              }
+                            },
+                            "Property": "Par"
+                          }
+                        }
+                      ],
+                      "Values": [
+                        [
+                          {
+                            "Literal": {
+                              "Value": "36L"
+                            }
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "objects": {
+          "general": [
+            {
+              "properties": {
+                "isInvertedSelectionMode": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "true"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "3fe0dc1022307bdb269b",
+      "target": "50455eeca190b62e679e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "3fe0dc1022307bdb269b",
+      "target": "fc0b9ab2eb50b3493540",
+      "type": "NoFilter"
+    },
+    {
+      "source": "3fe0dc1022307bdb269b",
+      "target": "9c75ecd132c9a2ae6777",
+      "type": "NoFilter"
+    },
+    {
+      "source": "50455eeca190b62e679e",
+      "target": "e078c05ac2402eba20a4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "50455eeca190b62e679e",
+      "target": "3fe0dc1022307bdb269b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "50455eeca190b62e679e",
+      "target": "4c60e4db89a905b0e090",
+      "type": "NoFilter"
+    },
+    {
+      "source": "fc0b9ab2eb50b3493540",
+      "target": "4c60e4db89a905b0e090",
+      "type": "NoFilter"
+    },
+    {
+      "source": "fc0b9ab2eb50b3493540",
+      "target": "e078c05ac2402eba20a4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "fc0b9ab2eb50b3493540",
+      "target": "3fe0dc1022307bdb269b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "e078c05ac2402eba20a4",
+      "target": "50455eeca190b62e679e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "e078c05ac2402eba20a4",
+      "target": "fc0b9ab2eb50b3493540",
+      "type": "NoFilter"
+    },
+    {
+      "source": "e078c05ac2402eba20a4",
+      "target": "9c75ecd132c9a2ae6777",
+      "type": "NoFilter"
+    },
+    {
+      "source": "3fe0dc1022307bdb269b",
+      "target": "d32b081e01c5e6b7d55e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "a6f54ef2e1e0de021ad5",
+      "target": "50455eeca190b62e679e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "a6f54ef2e1e0de021ad5",
+      "target": "d32b081e01c5e6b7d55e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "a6f54ef2e1e0de021ad5",
+      "target": "fc0b9ab2eb50b3493540",
+      "type": "NoFilter"
+    },
+    {
+      "source": "a6f54ef2e1e0de021ad5",
+      "target": "9c75ecd132c9a2ae6777",
+      "type": "NoFilter"
+    },
+    {
+      "source": "e078c05ac2402eba20a4",
+      "target": "d32b081e01c5e6b7d55e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "50455eeca190b62e679e",
+      "target": "a6f54ef2e1e0de021ad5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "d32b081e01c5e6b7d55e",
+      "target": "e078c05ac2402eba20a4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "d32b081e01c5e6b7d55e",
+      "target": "4c60e4db89a905b0e090",
+      "type": "NoFilter"
+    },
+    {
+      "source": "d32b081e01c5e6b7d55e",
+      "target": "a6f54ef2e1e0de021ad5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "d32b081e01c5e6b7d55e",
+      "target": "3fe0dc1022307bdb269b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "fc0b9ab2eb50b3493540",
+      "target": "a6f54ef2e1e0de021ad5",
+      "type": "NoFilter"
+    }
+  ]
+}

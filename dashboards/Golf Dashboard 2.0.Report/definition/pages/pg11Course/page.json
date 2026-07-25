@@ -1,0 +1,76 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg11Course",
+  "displayName": "Course Dashboard",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "34e1e20694a9333497b6",
+      "target": "50cd2196b02cfdd5f06d",
+      "type": "DataFilter"
+    },
+    {
+      "source": "34e1e20694a9333497b6",
+      "target": "2f9e0892d8926109eba9",
+      "type": "DataFilter"
+    },
+    {
+      "source": "948db30d8a85cea9a0d8",
+      "target": "d407eaa208cf46c7179a",
+      "type": "DataFilter"
+    },
+    {
+      "source": "2f9e0892d8926109eba9",
+      "target": "948db30d8a85cea9a0d8",
+      "type": "NoFilter"
+    },
+    {
+      "source": "50cd2196b02cfdd5f06d",
+      "target": "948db30d8a85cea9a0d8",
+      "type": "NoFilter"
+    },
+    {
+      "source": "948db30d8a85cea9a0d8",
+      "target": "cb8ec2ec42a36b1e8367",
+      "type": "NoFilter"
+    },
+    {
+      "source": "948db30d8a85cea9a0d8",
+      "target": "65a772caa866d050a0e3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "948db30d8a85cea9a0d8",
+      "target": "34e1e20694a9333497b6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "948db30d8a85cea9a0d8",
+      "target": "433d9932392a0aef44e0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "50cd2196b02cfdd5f06d",
+      "target": "65a772caa866d050a0e3",
+      "type": "DataFilter"
+    },
+    {
+      "source": "fb5b811d0e132ec916a6",
+      "target": "433d9932392a0aef44e0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "34e1e20694a9333497b6",
+      "target": "433d9932392a0aef44e0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "cb8ec2ec42a36b1e8367",
+      "target": "433d9932392a0aef44e0",
+      "type": "NoFilter"
+    }
+  ]
+}

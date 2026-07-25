@@ -1,0 +1,36 @@
+table 'Course Table'
+	lineageTag: 4a5638ba-d173-4b49-b3ab-d20b910e4dd2
+
+	column Course
+		lineageTag: 44d5d4f6-1812-46b1-9cfb-60e401d54084
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Course]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Course'
+		lineageTag: 4be084cc-8610-44fe-a456-fe61ca37b8e8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Short Course]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Course Table' = calculated
+		mode: import
+		source = ```
+				
+				DISTINCT(
+				    SELECTCOLUMNS(
+				        'Golf Log',
+				        "Course", 'Golf Log'[Course],
+				        "Short Course", 'Golf Log'[Short Course]
+				    )
+				)
+				
+				
+				```
+
+	annotation PBI_Id = 36b444b30642447885ad5a6a51f93bb8
+

@@ -1,0 +1,137 @@
+table strokes_gained_summary
+	lineageTag: 083233b4-9069-4214-b0cb-adca5c0e9a75
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4b777ef6-e457-43d5-914f-027d28b22793
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: b3cd729e-df60-4c5d-bfbc-6cfb24e7bff2
+			defaultHierarchy: LocalDateTable_ecacfbdd-6691-4727-a0dc-5be81039820d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Course
+		dataType: string
+		lineageTag: 8f4ec5d0-e1da-4b21-b24e-4e9bcc6bb6b0
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column SG_Putting
+		dataType: double
+		lineageTag: f4c75179-087f-4d53-ad1c-47498cf720c0
+		summarizeBy: sum
+		sourceColumn: SG_Putting
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SG_Approach
+		dataType: double
+		lineageTag: 818b5c2e-0178-4617-af49-d98c86d4a0d3
+		summarizeBy: sum
+		sourceColumn: SG_Approach
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SG_OTT
+		dataType: double
+		lineageTag: 5ece34ed-5ede-4297-94fb-6fbb8cb5a33c
+		summarizeBy: sum
+		sourceColumn: SG_OTT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SG_Total
+		dataType: double
+		lineageTag: 79f13d18-180d-47eb-a539-abe6b0ec1429
+		summarizeBy: sum
+		sourceColumn: SG_Total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Golfer
+		dataType: string
+		lineageTag: 9e5e0e71-f975-4728-b2f5-a756f5ba05d5
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tees
+		dataType: string
+		lineageTag: 1294a764-ac0a-4d07-8c8c-8486d4cc2d89
+		summarizeBy: none
+		sourceColumn: Tees
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hole Score'
+		dataType: int64
+		formatString: 0
+		lineageTag: e16d20d8-732e-4c28-b2cc-215be96d5f87
+		summarizeBy: sum
+		sourceColumn: Hole Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column SG_T2G
+		dataType: double
+		lineageTag: 4789eba9-c35c-4134-934a-0853b7250eef
+		summarizeBy: sum
+		sourceColumn: SG_T2G
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SG_ARG
+		dataType: double
+		lineageTag: 7d8a5061-df58-40df-b1d6-fe7b9d9eee39
+		summarizeBy: sum
+		sourceColumn: SG_ARG
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RoundKey
+		dataType: string
+		lineageTag: 119ca494-363d-4f5e-b7a3-20aa3d82ac00
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition strokes_gained_summary = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\derived\strokes_gained_summary.xlsx"), null, true),
+				    #"Round Summary_Sheet" = Source{[Item="Round Summary",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Round Summary_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Golfer", type text}, {"Date", type date}, {"Course", type text}, {"Tees", type text}, {"Hole Score", Int64.Type}, {"SG_Total", type number}, {"SG_T2G", type number}, {"SG_OTT", type number}, {"SG_Approach", type number}, {"SG_ARG", type number}, {"SG_Putting", type number}}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Changed Type", "Merged", each Text.Combine({[Golfer], " - ", Text.From([Date], "en-US"), " - ", [Course]}), type text),
+				    #"Renamed Columns" = Table.RenameColumns(#"Inserted Merged Column",{{"Merged", "RoundKey"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

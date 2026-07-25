@@ -1,0 +1,216 @@
+table 'Rapsodo Course Stats'
+	lineageTag: f416daf5-32c6-4de0-906b-88459cba8b2f
+
+	column Course
+		dataType: string
+		lineageTag: 4b3abe18-314b-401c-a6bc-c28d4dd8dfab
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Type'
+		dataType: string
+		lineageTag: 7e7a8307-c6b2-403e-a0a7-5a959b7d171b
+		summarizeBy: none
+		sourceColumn: Club Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Brand'
+		dataType: string
+		lineageTag: c2b73058-d055-450a-927c-e633febacf6e
+		summarizeBy: none
+		sourceColumn: Club Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Model'
+		dataType: string
+		lineageTag: 95bcaf2d-3e20-4e53-89a0-e6ad2e594b23
+		summarizeBy: none
+		sourceColumn: Club Model
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Carry Distance'
+		dataType: double
+		lineageTag: b9096e9b-569b-4d96-94e2-19eb643b1469
+		summarizeBy: sum
+		sourceColumn: Carry Distance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Distance'
+		dataType: double
+		lineageTag: a4932cc5-e04d-4179-93b3-5675e212fb86
+		summarizeBy: sum
+		sourceColumn: Total Distance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Ball Speed'
+		dataType: double
+		lineageTag: b800931e-3406-45d1-a769-26c85c4a50d1
+		summarizeBy: sum
+		sourceColumn: Ball Speed
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Launch Angle'
+		dataType: double
+		lineageTag: 691f49c7-6b3b-4b5f-9857-ca842dec15e1
+		summarizeBy: sum
+		sourceColumn: Launch Angle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Launch Direction'
+		dataType: double
+		lineageTag: 3090e787-631a-4b22-8354-39b50eca9ac2
+		summarizeBy: sum
+		sourceColumn: Launch Direction
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Apex
+		dataType: double
+		lineageTag: 6b8300dd-1d22-4211-b989-2e8e535e2c5c
+		summarizeBy: sum
+		sourceColumn: Apex
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Side Carry'
+		dataType: double
+		lineageTag: 792be10f-2b3c-464e-9687-58210260cb95
+		summarizeBy: sum
+		sourceColumn: Side Carry
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Club Speed'
+		dataType: double
+		lineageTag: f24b8b22-bf7f-4a90-afad-92477b3d5bbe
+		summarizeBy: sum
+		sourceColumn: Club Speed
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Smash Factor'
+		dataType: double
+		lineageTag: d91c45d3-b060-4f0e-bce9-cf2c4eb24377
+		summarizeBy: sum
+		sourceColumn: Smash Factor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Descent Angle'
+		dataType: double
+		lineageTag: 2874ba78-2f11-4d73-afcd-56ad014ea5f7
+		summarizeBy: sum
+		sourceColumn: Descent Angle
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Club Group' = ```
+			
+			SWITCH(
+			    TRUE(),
+			    'Rapsodo Course Stats'[Club Type] IN {"4i", "5i", "6i"}, "Long Irons",
+			    'Rapsodo Course Stats'[Club Type] IN {"7i", "8i", "9i"}, "Mid Irons",
+			    'Rapsodo Course Stats'[Club Type] IN {"pw", "gw", "sw", "lw"}, "Wedges",
+			    'Rapsodo Course Stats'[Club Type] IN {"3w", "3h"}, "Fairway Woods",
+			    'Rapsodo Course Stats'[Club Type] IN {"d"}, "Driver",
+			    "Other"
+			)
+			
+			```
+		lineageTag: abc57838-1216-4078-82ec-000fc67794e5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Golfer
+		dataType: string
+		lineageTag: c2e19319-8262-4deb-ab55-0c91c78ef1e2
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Attack Angle'
+		dataType: string
+		lineageTag: 8ea71007-b5d3-4bd8-8408-ef74f76e60cc
+		summarizeBy: none
+		sourceColumn: Attack Angle
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Path'
+		dataType: string
+		lineageTag: 4e87c11c-b05d-44a9-947b-309542ad4ca1
+		summarizeBy: none
+		sourceColumn: Club Path
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Data Est Type'
+		dataType: string
+		lineageTag: 92fd230b-1a3e-4bb4-ad52-42d0d56e7c63
+		summarizeBy: none
+		sourceColumn: Club Data Est Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Spin Rate'
+		dataType: string
+		lineageTag: 2803e298-c9dc-4c58-bca6-b86a347ab022
+		summarizeBy: none
+		sourceColumn: Spin Rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Spin Axis'
+		dataType: string
+		lineageTag: a7bf06ba-d41b-4faf-9a5f-8ce64289660a
+		summarizeBy: none
+		sourceColumn: Spin Axis
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Rapsodo Course Stats' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"Rapsodo Course Stats_Sheet" = Source{[Item="Rapsodo Course Stats",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Rapsodo Course Stats_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Course", type text}, {"Club Type", type text}, {"Club Brand", type text}, {"Club Model", type text}, {"Carry Distance", type number}, {"Total Distance", type number}, {"Ball Speed", type number}, {"Launch Angle", type number}, {"Launch Direction", type number}, {"Apex", type number}, {"Side Carry", type number}, {"Club Speed", type number}, {"Smash Factor", type number}, {"Descent Angle", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

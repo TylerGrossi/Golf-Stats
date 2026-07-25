@@ -1,0 +1,202 @@
+table 'Golf Scores'
+	lineageTag: 7e728d4d-8524-4d45-9669-8d0c4b2106cf
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 588fad2b-01b4-4de0-8a65-44f800771657
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 84445b61-8916-4525-954a-29cbc55ad0d5
+			defaultHierarchy: LocalDateTable_7875566d-8384-456a-963a-0443fa342214.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Score
+		dataType: int64
+		formatString: 0
+		lineageTag: fe18a34d-bfbb-4e8a-ba36-b0d46b02dbc4
+		summarizeBy: none
+		sourceColumn: Score
+
+		annotation SummarizationSetBy = User
+
+	column 'Over Par'
+		dataType: int64
+		formatString: 0
+		lineageTag: f772af4b-072c-4b98-b0d0-7436a525dbbb
+		summarizeBy: sum
+		sourceColumn: Over Par
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Played With'
+		dataType: string
+		lineageTag: cfd9ba2f-ca25-4070-bffe-55fabeb50fdd
+		summarizeBy: none
+		sourceColumn: Played With
+
+		annotation SummarizationSetBy = Automatic
+
+	column Par
+		dataType: int64
+		formatString: 0
+		lineageTag: a8d890ce-9193-4259-b482-d637455b5b59
+		summarizeBy: sum
+		sourceColumn: Par
+
+		annotation SummarizationSetBy = Automatic
+
+	column Course
+		dataType: string
+		lineageTag: af3f7738-ebeb-4c57-8f30-b087b1a94dfa
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tees
+		dataType: string
+		lineageTag: 529bf75c-a06b-4cac-8ac9-69c8207b6cd6
+		summarizeBy: none
+		sourceColumn: Tees
+
+		annotation SummarizationSetBy = Automatic
+
+	column Yardage
+		dataType: int64
+		formatString: 0
+		lineageTag: 58308200-caef-4b1a-aba5-e06ddf7abfba
+		summarizeBy: sum
+		sourceColumn: Yardage
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Front 9'
+		dataType: int64
+		formatString: 0
+		lineageTag: d3a88865-d44d-4693-8fa8-12d7fb46423d
+		summarizeBy: sum
+		sourceColumn: Front 9
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Back 9'
+		dataType: int64
+		formatString: 0
+		lineageTag: 092c4576-91c7-424d-bc33-d42871e3642f
+		summarizeBy: sum
+		sourceColumn: Back 9
+
+		annotation SummarizationSetBy = Automatic
+
+	column Eagles
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ba16060-0e64-4d01-aa27-f461b55a4c05
+		summarizeBy: sum
+		sourceColumn: Eagles
+
+		annotation SummarizationSetBy = Automatic
+
+	column Birdies
+		dataType: int64
+		formatString: 0
+		lineageTag: 0475c680-dde4-4870-b17c-f48d660611ea
+		summarizeBy: sum
+		sourceColumn: Birdies
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pars
+		dataType: int64
+		formatString: 0
+		lineageTag: 73486e27-26d4-4cea-9956-8694929ff49a
+		summarizeBy: sum
+		sourceColumn: Pars
+
+		annotation SummarizationSetBy = Automatic
+
+	column Bogeys
+		dataType: int64
+		formatString: 0
+		lineageTag: ffa2d44d-f2f8-430f-a5ad-4668fc6f6e2b
+		summarizeBy: sum
+		sourceColumn: Bogeys
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Double Bogeys'
+		dataType: int64
+		formatString: 0
+		lineageTag: be2f0088-06c2-4723-914a-9159568a1ccc
+		summarizeBy: sum
+		sourceColumn: Double Bogeys
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Holes Played'
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a541398-20c0-41c4-b9e2-050551da6828
+		summarizeBy: sum
+		sourceColumn: Holes Played
+
+		annotation SummarizationSetBy = Automatic
+
+	column Putts
+		dataType: int64
+		formatString: 0
+		lineageTag: fa2ae9af-4770-47ee-b762-ecaed61c0ef7
+		summarizeBy: none
+		sourceColumn: Putts
+
+		annotation SummarizationSetBy = User
+
+	column Fairways
+		dataType: int64
+		formatString: 0
+		lineageTag: 6f305a1d-cff2-4e7c-8b1d-7dda5fb2aedb
+		summarizeBy: sum
+		sourceColumn: Fairways
+
+		annotation SummarizationSetBy = Automatic
+
+	column Greens
+		dataType: int64
+		formatString: 0
+		lineageTag: 76e9b06d-1dc9-4c15-b205-1cc370abaa8e
+		summarizeBy: sum
+		sourceColumn: Greens
+
+		annotation SummarizationSetBy = Automatic
+
+	column Golfer
+		dataType: string
+		lineageTag: b2a36929-2cc0-4813-890d-a6229538200b
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Golf Scores' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"Golf Scores_Sheet" = Source{[Item="Golf Scores",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Golf Scores_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type date}, {"Score", Int64.Type}, {"Over Par", Int64.Type}, {"Played With", type text}, {"Par", Int64.Type}, {"Course", type text}, {"Tees", type text}, {"Yardage", Int64.Type}, {"Front 9", Int64.Type}, {"Back 9", Int64.Type}, {"Eagles", Int64.Type}, {"Birdies", Int64.Type}, {"Pars", Int64.Type}, {"Bogeys", Int64.Type}, {"Double Bogeys", Int64.Type}, {"Holes Played", Int64.Type}, {"Putts", Int64.Type}, {"Fairways", Int64.Type}, {"Greens", Int64.Type}}),
+				    #"Sorted Rows" = Table.Sort(#"Changed Type",{{"Date", Order.Descending}})
+				in
+				    #"Sorted Rows"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

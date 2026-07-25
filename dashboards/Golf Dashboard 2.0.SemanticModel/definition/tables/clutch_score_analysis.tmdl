@@ -1,0 +1,119 @@
+table clutch_score_analysis
+	lineageTag: cdd3257e-3f4a-404f-bc9f-29c7ed9b3b62
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 98b2e163-824a-46fb-a961-b606bc61c0d9
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: bd172cf0-7507-472d-bd28-bd364c89678b
+			defaultHierarchy: LocalDateTable_f7926181-0efd-463e-9fc8-ebb868617894.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Course
+		dataType: string
+		lineageTag: bfcb29ca-0fc6-412a-8c69-4dbd16abc5cc
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClutchLabel
+		dataType: string
+		lineageTag: 640e6240-8c3f-437f-adee-476abcb11c79
+		summarizeBy: none
+		sourceColumn: ClutchLabel
+
+		annotation SummarizationSetBy = Automatic
+
+	column Avg_Early_Score_vs_Par
+		dataType: double
+		lineageTag: 1a4f41f6-16ec-420d-877e-351ae389e3dd
+		summarizeBy: sum
+		sourceColumn: Avg_Early_Score_vs_Par
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Final3_Score_vs_Par
+		dataType: int64
+		lineageTag: 1ff6a6df-fb6d-4ad5-be71-80540eed41f2
+		summarizeBy: sum
+		sourceColumn: Final3_Score_vs_Par
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ClutchScore_Par
+		dataType: double
+		lineageTag: 8db85ac6-7e08-4276-a1bd-76c0168370e1
+		summarizeBy: sum
+		sourceColumn: ClutchScore_Par
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ClutchScore_Weighted
+		dataType: double
+		lineageTag: 7794f688-1cda-4336-ac39-bc056eabf9c8
+		summarizeBy: sum
+		sourceColumn: ClutchScore_Weighted
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Score_Trend_Slope
+		dataType: double
+		lineageTag: 4d5d7ad7-aa8d-4925-802a-b48466894d0e
+		summarizeBy: sum
+		sourceColumn: Score_Trend_Slope
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Golfer
+		dataType: string
+		lineageTag: ac94d034-d1e3-4fc5-bcfb-c0e8e08be2a2
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundKey
+		dataType: string
+		lineageTag: 7484fe94-e0c3-46a3-99f3-da8b5fa0280f
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition clutch_score_analysis = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\derived\clutch_score_analysis.xlsx"), null, true),
+				    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type date}, {"ClutchLabel", type text}, {"Course", type text}, {"Avg_Early_Score_vs_Par", type number}, {"Final3_Score_vs_Par", type number}, {"ClutchScore_Par", type number}, {"ClutchScore_Weighted", type number}, {"Score_Trend_Slope", type number}}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Changed Type",{"Date", "Course", "Avg_Early_Score_vs_Par", "Final3_Score_vs_Par", "ClutchScore_Par", "ClutchScore_Weighted", "Score_Trend_Slope", "ClutchLabel"}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Reordered Columns","RoundKey",each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Inserted Merged Column",{{"Final3_Score_vs_Par", Int64.Type}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

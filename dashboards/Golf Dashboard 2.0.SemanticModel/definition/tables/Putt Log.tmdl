@@ -1,0 +1,187 @@
+table 'Putt Log'
+	lineageTag: 83e33e4c-5fff-4cf6-9aa3-7f4b64de127d
+
+	measure 'Two Putt Count' =
+			
+			COALESCE(
+			    CALCULATE(
+			        COUNTROWS('Putt Log'),
+			        'Putt Log'[Putt Score] = 2
+			    ),
+			    0
+			)
+		formatString: 0
+		lineageTag: 17487292-eef9-4f59-854d-daecaefe9240
+
+	measure 'One Putt Count' = ```
+			
+			COALESCE(
+			    CALCULATE(
+			        COUNTROWS('Putt Log'),
+			        'Putt Log'[Putt Score] <= 1
+			    ),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 1280d976-eb4a-4528-aed5-f645af235c50
+
+	measure 'Three Putt Count' =
+			
+			COALESCE(
+			    CALCULATE(
+			        COUNTROWS('Putt Log'),
+			        'Putt Log'[Putt Score] >= 3
+			    ),
+			    0
+			)
+		formatString: 0
+		lineageTag: 4ca79cc2-6759-4ea4-9df9-78525d09fe02
+
+	measure 'Hole Outs' = ```
+			
+			COALESCE(
+			    CALCULATE(
+			        COUNTROWS('Putt Log'),
+			        'Putt Log'[Putt Score] = 0
+			    ),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 0f0af9ec-45d6-45f1-ac6f-2f1e4b36ffec
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 6367df44-5564-4e44-a29b-a348d42fdf8b
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 6dcb3a52-e978-44f9-8660-39896063b5bf
+			defaultHierarchy: LocalDateTable_0ea3623d-79fe-44dc-be38-455e2fa266d4.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Course
+		dataType: string
+		lineageTag: 5a446229-dc87-4195-a3fe-1b3ef27c9621
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Putts
+		dataType: int64
+		formatString: 0
+		lineageTag: 24df9e53-fcb9-4a47-b91a-734573ab30ee
+		summarizeBy: none
+		sourceColumn: Putts
+
+		annotation SummarizationSetBy = User
+
+	column Hole
+		dataType: string
+		lineageTag: 93653a59-43b3-45e9-b959-e4979c870244
+		summarizeBy: none
+		sourceColumn: Hole
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Putt Score'
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f6339cc-4eb7-406d-abd4-123db0086b4e
+		summarizeBy: sum
+		sourceColumn: Putt Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column CourseHoleKey
+		dataType: string
+		lineageTag: 9db6f456-27c3-4909-b181-f862599c9a0a
+		summarizeBy: none
+		sourceColumn: CourseHoleKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundKey
+		dataType: string
+		lineageTag: df46a8a0-4d85-4df5-a0a4-2667c5504985
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hole Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 69513427-5e37-478f-ac54-eefe6fb09e54
+		summarizeBy: sum
+		sourceColumn: Hole Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Course'
+		dataType: string
+		lineageTag: 566fa1f5-3700-4ab6-84b5-c65c71207edc
+		summarizeBy: none
+		sourceColumn: Short Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Golfer
+		dataType: string
+		lineageTag: 634201f4-6341-40b7-b5ff-b776b1822c3e
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Putt Log' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"Putt Log_Sheet" = Source{[Item="Putt Log",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Putt Log_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type any}, {"Course", type text}, {"Putts", type any}, {"Hole 1", type any}, {"Hole 2", type any}, {"Hole 3", type any}, {"Hole 4", type any}, {"Hole 5", type any}, {"Hole 6", type any}, {"Hole 7", type any}, {"Hole 8", type any}, {"Hole 9", type any}, {"Hole 10", Int64.Type}, {"Hole 11", Int64.Type}, {"Hole 12", Int64.Type}, {"Hole 13", Int64.Type}, {"Hole 14", Int64.Type}, {"Hole 15", Int64.Type}, {"Hole 16", Int64.Type}, {"Hole 17", Int64.Type}, {"Hole 18", Int64.Type}, {"Putts2", Int64.Type}, {"Fairways", Int64.Type}, {"GIR", Int64.Type}, {"Par 3 Avg", type number}, {"Par 4 Avg", type number}, {"Par 5 Avg", type number}}),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(#"Changed Type",3),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Removed Bottom Rows", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Unpivoted Only Selected Columns" = Table.Unpivot(#"Removed Blank Rows", {"Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5", "Hole 6", "Hole 7", "Hole 8", "Hole 9", "Hole 10", "Hole 11", "Hole 12", "Hole 13", "Hole 14", "Hole 15", "Hole 16", "Hole 17", "Hole 18"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Only Selected Columns",{{"Attribute", "Hole"}, {"Value", "Putt Score"}}),
+				    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "Hole Number", each Number.FromText(Text.Replace([Hole], "Hole ", ""))),
+				    #"Added Custom1" = Table.AddColumn(#"Renamed Columns", "CourseHoleKey", each [Course] & " " & [Hole]),
+				    #"Added Custom2" = Table.AddColumn(#"Added Custom1","RoundKey",each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course]),
+				    #"Removed Columns" = Table.RemoveColumns(#"Added Custom2",{"Par 3 Avg", "Par 4 Avg", "Par 5 Avg", "GIR", "Putts2", "Fairways"}),
+				    #"Added Custom3" = Table.AddColumn(#"Removed Columns", "Hole Number", each Number.From(Text.Middle([Hole], 5))),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom3",{ "Date", "Course", "Putts", "Hole", "Putt Score", "CourseHoleKey", "RoundKey", "Hole Number"}),
+				    #"Duplicated Column1" = Table.DuplicateColumn(#"Reordered Columns", "Course", "Course - Copy"),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Duplicated Column1",{"Date", "Course", "Course - Copy", "Putts", "Hole", "Putt Score", "CourseHoleKey", "RoundKey", "Hole Number"}),
+				    #"Sorted Rows" = Table.Sort(#"Reordered Columns1",{{"Date", Order.Descending}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Sorted Rows",{{"Course - Copy", "Short Course"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns1","Wailea Golf Club Emerald Course","Wailea Emerald",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Wailea Golf Club Gold Course","Wailea Gold",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Ka'anapali Golf Resort Royal Course","Ka'anapali Royal",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Sebonack Golf Club","Sebonack",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","Brentwood Country Club","Brentwood",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value4","Spring Lake Thunderbird","Spring Lake",Replacer.ReplaceText,{"Short Course"}),
+				    #"Sorted Rows1" = Table.Sort(#"Replaced Value8",{{"Short Course", Order.Descending}}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Sorted Rows1","Wind Watch Hamlet Course","Wind Watch",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","Willow Creek Hamlet Course","Willow Creek",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6","Middle Island Country Club - Oak and Spruce","Middle Island",Replacer.ReplaceText,{"Short Course"}),
+				    #"Sorted Rows2" = Table.Sort(#"Replaced Value7",{{"Date", Order.Descending}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Sorted Rows2",{{"Date", type date}, {"Putts", Int64.Type}, {"Putt Score", Int64.Type}, {"CourseHoleKey", type text}, {"RoundKey", type text}, {"Hole Number", Int64.Type}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

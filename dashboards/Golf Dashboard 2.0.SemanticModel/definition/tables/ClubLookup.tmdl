@@ -1,0 +1,35 @@
+table ClubLookup
+	lineageTag: 8b616ae9-93ab-46a0-92b0-d1976e7be23a
+
+	column Club
+		lineageTag: c8146f06-0732-441c-bef7-70f9f48d3ad4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Club]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Category'
+		lineageTag: 08ff495d-cc03-428c-9854-0ea2f183881e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Club Category]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ClubLookup = calculated
+		mode: import
+		source = ```
+				
+				DISTINCT (
+				    SELECTCOLUMNS (
+				        'Range Stats',
+				        "Club", 'Range Stats'[Club Type],
+				        "Club Category", 'Range Stats'[Club Group]
+				    )
+				)
+				
+				```
+
+	annotation PBI_Id = c0bf595e9adb4c199c2b0c2c2bf006e7
+

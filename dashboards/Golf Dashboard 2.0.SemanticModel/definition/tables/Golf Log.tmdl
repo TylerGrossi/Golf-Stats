@@ -1,0 +1,430 @@
+table 'Golf Log'
+	lineageTag: ea10d92f-9e7e-4770-987d-2fe77e249475
+
+	measure 'Birdie Count' = ```
+			COALESCE(
+			    CALCULATE(COUNTROWS('Golf Log'), 'Golf Log'[Score Result] = "Birdie"),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 1d43e9f5-3405-4bb3-9345-ab00d05dc6f4
+
+	measure 'Par Count' = ```
+			COALESCE(
+			    CALCULATE(COUNTROWS('Golf Log'), 'Golf Log'[Score Result] = "Par"),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 53212bd0-e6b1-4d3e-b9aa-7bf57a516204
+
+	measure 'Bogey Count' = ```
+			COALESCE(
+			    CALCULATE(COUNTROWS('Golf Log'), 'Golf Log'[Score Result] = "Bogey"),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 58b4568a-a52d-42b8-b46e-daee6a8df334
+
+	measure 'Eagle Count' = ```
+			COALESCE(
+			    CALCULATE(COUNTROWS('Golf Log'), 'Golf Log'[Score Result] = "Eagle"),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: c74342af-08be-4d55-9940-65588dcea30c
+
+	measure 'Double Bogey+ Count t' = ```
+			COALESCE(
+			    CALCULATE(COUNTROWS('Golf Log'), 'Golf Log'[Score Result] = "Double Bogey+"),
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: dbb40fa8-14c6-4d70-ba80-1c41b889019a
+
+	measure 'Shots Over Par' = 'Golf Log'[Bogey Count] + 'Golf Log'[Double Bogey+ Count t]
+		formatString: 0
+		lineageTag: 1eab3956-d10a-4ed6-ba6e-1229680cfb26
+
+	measure 'Shots Under Par' = 'Golf Log'[Birdie Count] + 'Golf Log'[Eagle Count]
+		formatString: 0
+		lineageTag: a1548e02-49ba-42f4-b879-88e3289ea969
+
+	measure 'Over Par by Hole' = ```
+			
+			VAR SelectedHole = SELECTEDVALUE('Golf Log'[Hole])
+			VAR HoleX =
+			    FILTER(
+			        'Golf Log',
+			        'Golf Log'[Hole] = SelectedHole
+			    )
+			
+			VAR Score =
+			    CALCULATE(SUM('Golf Log'[Hole Score]), HoleX)
+			
+			VAR Par =
+			    CALCULATE(
+			        SUMX(
+			            HoleX,
+			            LOOKUPVALUE(
+			                'Course Stats'[Hole Par],
+			                'Course Stats'[Course], 'Golf Log'[Course],
+			                'Course Stats'[Hole], 'Golf Log'[Hole]
+			            )
+			        )
+			    )
+			
+			RETURN
+			Score - Par
+			
+			```
+		formatString: 0
+		lineageTag: 255bbaf1-90d9-4cca-80e3-65781fe04482
+
+	measure 'Times Played' = ```
+			COUNT('Golf Log'[Score])
+			
+			```
+		formatString: 0
+		lineageTag: e03420b0-821f-49b4-8425-befa3e6b81a9
+
+	measure 'Sum Over Par by Hole' = ```
+			
+			VAR SelectedHole = SELECTEDVALUE('Golf Log'[Hole])
+			
+			VAR HoleData =
+			    FILTER(
+			        'Golf Log',
+			        'Golf Log'[Hole] = SelectedHole
+			    )
+			
+			VAR TotalScore =
+			    CALCULATE(
+			        SUM('Golf Log'[Hole Score]),
+			        HoleData
+			    )
+			
+			VAR TotalPar =
+			    CALCULATE(
+			        SUMX(
+			            HoleData,
+			            LOOKUPVALUE(
+			                'Course Stats'[Hole Par],
+			                'Course Stats'[Course], 'Golf Log'[Course],
+			                'Course Stats'[Hole], 'Golf Log'[Hole]
+			            )
+			        )
+			    )
+			
+			RETURN
+			TotalScore - TotalPar
+			
+			```
+		formatString: 0
+		lineageTag: 5f6a7d93-0184-468b-a75a-6d7a6066fbb3
+
+	measure 'Unique Course Count' = DISTINCTCOUNT('Golf Log'[Course])
+		formatString: 0
+		lineageTag: 5ab53e04-1a7f-4447-b28a-fc35894fbd0c
+
+	measure 'Average Front 9 Score' = ```
+			
+			AVERAGEX(
+			    VALUES('Golf Log'[RoundKey]),  -- or use a unique identifier for each round
+			    CALCULATE(
+			        SUM('Golf Log'[Hole Score]),
+			        'Golf Log'[Hole Number] >= 1 && 'Golf Log'[Hole Number] <= 9
+			    )
+			)
+			
+			```
+		lineageTag: ebc3731e-417d-4aff-a8e3-7dc8b4164268
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Back 9 Score' = ```
+			
+			AVERAGEX(
+			    VALUES('Golf Log'[RoundKey]),  -- or another unique round identifier
+			    CALCULATE(
+			        SUM('Golf Log'[Hole Score]),
+			        'Golf Log'[Hole Number] >= 10 && 'Golf Log'[Hole Number] <= 18
+			    )
+			)
+			
+			```
+		lineageTag: dbebf615-bb20-4765-854f-d9b58eeae52a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: mmmm d\, yyyy
+		lineageTag: d6628aaf-aad9-460b-8345-0d9304647eb8
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 0d6b5848-6378-4a4c-bbf7-1e12c3de147f
+			defaultHierarchy: LocalDateTable_dfdc2824-cac3-4e81-b350-745efe4e6818.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column Course
+		dataType: string
+		lineageTag: f384ea2f-78fa-4ea9-add5-54e83d7e0b38
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Score
+		dataType: int64
+		formatString: 0
+		lineageTag: 87dc5069-0c4b-4ad3-be26-a52080673437
+		summarizeBy: none
+		sourceColumn: Score
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = User
+
+	column 'Par 3 Avg'
+		dataType: double
+		lineageTag: 98a2395e-eafd-4aa1-a6da-02ea32a41de4
+		summarizeBy: sum
+		sourceColumn: Par 3 Avg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Par 4 Avg'
+		dataType: double
+		lineageTag: 1be299f2-8f48-4935-a26d-2246c70c437f
+		summarizeBy: sum
+		sourceColumn: Par 4 Avg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Par 5 Avg'
+		dataType: double
+		lineageTag: 945b3ee1-4b97-43e8-ba0b-5b1e3340b0ec
+		summarizeBy: sum
+		sourceColumn: Par 5 Avg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Hole
+		dataType: string
+		lineageTag: 9aa4c6b4-af60-4cbd-9dc3-0674e1e4c31f
+		summarizeBy: none
+		sourceColumn: Hole
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hole Score'
+		dataType: int64
+		formatString: 0
+		lineageTag: a7c71fe0-e8b6-43ad-b773-dd6eb2243cd0
+		summarizeBy: none
+		sourceColumn: Hole Score
+
+		annotation SummarizationSetBy = User
+
+	column 'Hole Number' = ```
+			
+			VALUE(SUBSTITUTE('Golf Log'[Hole], "Hole ", ""))
+			
+			```
+		dataType: int64
+		lineageTag: c832b373-aab6-4f62-8cd7-e9ffdabb1631
+		summarizeBy: none
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Putts
+		dataType: int64
+		formatString: 0
+		lineageTag: d6cca8c2-d47e-42a8-97f6-bd8f87e32428
+		summarizeBy: sum
+		sourceColumn: Putts
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fairways
+		dataType: int64
+		formatString: 0
+		lineageTag: e38b6af4-aff2-4651-981a-9b02fcd3d0f8
+		summarizeBy: none
+		sourceColumn: Fairways
+
+		annotation SummarizationSetBy = User
+
+	column GIR
+		dataType: int64
+		formatString: 0
+		lineageTag: f1417a9e-f92e-47db-b59a-82e6c1597acf
+		summarizeBy: none
+		sourceColumn: GIR
+
+		annotation SummarizationSetBy = User
+
+	column Number
+		dataType: int64
+		formatString: 0
+		lineageTag: 784b29ef-d45a-4b5b-9459-cbf58f758753
+		summarizeBy: sum
+		sourceColumn: Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column CourseHoleKey
+		dataType: string
+		lineageTag: ce12a0b6-3062-4795-8da4-5783a18326f3
+		summarizeBy: none
+		sourceColumn: CourseHoleKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Score Result' = ```
+			
+			VAR Score = 'Golf Log'[Hole Score]
+			VAR Par = RELATED('Course Stats'[Hole Par])
+			RETURN 
+			    SWITCH(
+			        TRUE(),
+			        ISBLANK(Score) || ISBLANK(Par), BLANK(),
+			        Score = Par - 1, "Birdie",
+			        Score = Par,     "Par",
+			        Score = Par + 1, "Bogey",
+			        Score = Par + 2, "Double Bogey",
+			        Score = Par + 3, "Triple Bogey",
+			        Score = Par + 4, "Quad Bogey",
+			        Score < Par - 1, "Eagle"
+			    )
+			
+			```
+		lineageTag: 31da2e80-6288-4158-b440-6079edc62706
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	column RoundKey
+		dataType: string
+		lineageTag: 5d2e2c03-a695-4fab-8a11-a9963f182116
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Course'
+		dataType: string
+		lineageTag: e10c3ded-0495-4bb8-95a1-1428affa2c70
+		summarizeBy: none
+		sourceColumn: Short Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundLabel = ```
+			"All Rounds"
+			
+			```
+		lineageTag: 2d9c9c2b-21f6-4024-b59e-977b4532068f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column ShortCourseKey
+		dataType: string
+		lineageTag: 2e48ac5e-e77a-426d-8989-1f0a0a192ef9
+		summarizeBy: none
+		sourceColumn: ShortCourseKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nine = ```
+			IF('Golf Log'[Hole Number] <= 9, "Front 9", "Back 9")
+			
+			```
+		lineageTag: ee0215dd-c721-4d2a-bbcd-f34de767a3bb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Golfer
+		dataType: string
+		lineageTag: 32b22671-0834-4194-ac2f-bea753165b75
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Golf Log' = m
+		mode: import
+		source = ```
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"Golf Log_Sheet" = Source{[Item="Golf Log",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Golf Log_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type any}, {"Course", type text}, {"Score", type any}, {"Hole 1", Int64.Type}, {"Hole 2", Int64.Type}, {"Hole 3", Int64.Type}, {"Hole 4", Int64.Type}, {"Hole 5", Int64.Type}, {"Hole 6", Int64.Type}, {"Hole 7", Int64.Type}, {"Hole 8", Int64.Type}, {"Hole 9", Int64.Type}, {"Hole 10", Int64.Type}, {"Hole 11", Int64.Type}, {"Hole 12", Int64.Type}, {"Hole 13", Int64.Type}, {"Hole 14", Int64.Type}, {"Hole 15", Int64.Type}, {"Hole 16", Int64.Type}, {"Hole 17", Int64.Type}, {"Hole 18", Int64.Type}, {"Par 3 Avg", type number}, {"Par 4 Avg", type number}, {"Par 5 Avg", type number}}),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Changed Type", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(#"Removed Blank Rows",3),
+				    #"Unpivoted Only Selected Columns" = Table.Unpivot(#"Removed Bottom Rows", {"Hole 18", "Hole 17", "Hole 16", "Hole 15", "Hole 14", "Hole 13", "Hole 12", "Hole 11", "Hole 10", "Hole 9", "Hole 8", "Hole 7", "Hole 6", "Hole 5", "Hole 4", "Hole 3", "Hole 2", "Hole 1"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Only Selected Columns",{{"Attribute", "Hole"}, {"Value", "Hole Score"}}),
+				    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "Hole Number", each Number.From(Text.Middle([Hole], 5))),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Added Custom",{{"Hole Number", "Number"}}),
+				    #"Added Custom1" = Table.AddColumn(#"Renamed Columns1", "CourseHoleKey", each [Course] & " " & [Hole]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom1",{{"Date", type date}}),
+				    #"Added Custom2" = Table.AddColumn(
+				    #"Changed Type1", 
+				    "RoundKey", 
+				    each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course]
+				),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Added Custom2", "Course", "Course - Copy"),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Duplicated Column",{"Date", "Course", "Course - Copy", "Score", "Putts", "Fairways", "GIR", "Par 3 Avg", "Par 4 Avg", "Par 5 Avg", "Hole", "Hole Score", "Number", "CourseHoleKey", "RoundKey"}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Reordered Columns",{{"Course - Copy", "Short Course"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns2","Wailea Golf Club Emerald Course","Wailea Emerald",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Wailea Golf Club Gold Course","Wailea Gold",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Ka'anapali Golf Resort Royal Course","Ka'anapali Royal",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Sebonack Golf Club","Sebonack",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","Brentwood Country Club","Brentwood",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","Wind Watch Hamlet Course","Wind Watch Hamlet",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Replaced Value5","Spring Lake Thunderbird","Spring Lake",Replacer.ReplaceText,{"Short Course"}),
+				    #"Sorted Rows" = Table.Sort(#"Replaced Value9",{{"Short Course", Order.Descending}}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Sorted Rows","Willow Creek Hamlet Course","Willow Creek",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6","Wind Watch Hamlet","Wind Watch",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7","Middle Island Country Club - Oak and Spruce","Middle Island",Replacer.ReplaceText,{"Short Course"}),
+				    #"Added Custom3" = Table.AddColumn(#"Replaced Value8", "Custom", each [Short Course] & " Hole " & Text.From([Hole])),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Added Custom3",{{"Custom", "ShortCourseKey"}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns3",{{"Score", Int64.Type}, {"Putts", Int64.Type}, {"Fairways", Int64.Type}, {"GIR", Int64.Type}, {"Number", Int64.Type}, {"Hole Score", Int64.Type}, {"Hole", type text}, {"CourseHoleKey", type text}, {"RoundKey", type text}, {"ShortCourseKey", type text}})
+				in
+				    #"Changed Type2"
+				```
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

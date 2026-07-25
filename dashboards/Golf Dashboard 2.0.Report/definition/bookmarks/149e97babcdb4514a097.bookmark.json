@@ -1,0 +1,875 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Old Date On Course",
+  "name": "149e97babcdb4514a097",
+  "options": {
+    "targetVisualNames": []
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "pg08OnCourseTool",
+    "sections": {
+      "pg08OnCourseTool": {
+        "visualContainers": {
+          "5e3e5e139c37da11743d": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "2a295f6e9ba6cb32a810",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Hole Score"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "5263b430de035162d5c0",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Type"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "55a8a1ed7e4c7850009c",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Putts"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "0a0db3670d7e3906b8a1",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Fairways"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a139d6a598b81cc6917e",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "GIR"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "2d9420a112432dd00bca",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Date"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "bdec605a35e121683010",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Score"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "tableEx",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 1,
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Score"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "78fb3c375eae8443d3ed": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "3224235a151046102b0d",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Date"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'After'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "orderBy": [
+                {
+                  "Direction": 1,
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Date"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Date"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "da0ff5e4aae72635dd05": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "f162e4839d60b5096564",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Hole"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "general": [
+                    {
+                      "properties": {
+                        "filter": {
+                          "filter": {
+                            "Version": 2,
+                            "From": [
+                              {
+                                "Name": "h",
+                                "Entity": "Hole Log",
+                                "Type": 0
+                              }
+                            ],
+                            "Where": [
+                              {
+                                "Condition": {
+                                  "In": {
+                                    "Expressions": [
+                                      {
+                                        "Column": {
+                                          "Expression": {
+                                            "SourceRef": {
+                                              "Source": "h"
+                                            }
+                                          },
+                                          "Property": "Hole"
+                                        }
+                                      }
+                                    ],
+                                    "Values": [
+                                      [
+                                        {
+                                          "Literal": {
+                                            "Value": "1L"
+                                          }
+                                        }
+                                      ]
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "selection": [
+                    {
+                      "properties": {
+                        "strictSingleSelect": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "true"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Hole"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "89d012161750a7461792": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "85237d9fb0c3d2c95a80",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Hole"
+                        }
+                      },
+                      "Function": 6
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Hole"
+                        }
+                      },
+                      "Function": 6
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "878fccf3c29461ea698b": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "da7c9b3ea03ddabd4c07",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Handicap"
+                        }
+                      },
+                      "Function": 6
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Handicap"
+                        }
+                      },
+                      "Function": 6
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "e92846d6b6c07c6238bd": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "ed7f682c80ddad5bceb5",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Hole"
+                        }
+                      },
+                      "Function": 5
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Hole"
+                        }
+                      },
+                      "Function": 5
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "11ce040f922a39ebe32f": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "5865986fbeea918e7536",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Yardage"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "0fbc5e906023487d2b28",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Tees"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "cardVisual",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Yardage"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "58c7fc1864661c09d2f8": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "01692a55c922d10a7859",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Par"
+                        }
+                      },
+                      "Function": 6
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Par"
+                        }
+                      },
+                      "Function": 6
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "4d907348ef1c8cd59ad1": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "de32a85682d81627016e",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Hole Score"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Hole Score"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "b80f7c47f119726bba1d": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "7c0a90a63d2a22a561b7",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Putts"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Putts"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "09f7cf017dc985ed5719": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "45a2bdb2a184888c9081",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "GIR Average Display"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "GIR Average Display"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "4d4cb2e3a71018b2d774": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "90c607cc6bd295b8960e",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Fairway Average Display"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Hole Log"
+                        }
+                      },
+                      "Property": "Fairway Average Display"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "b7eddcbabc7c51010d1b": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "9a95ff3e1792b4645a82",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Score vs Par"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Hole Log"
+                            }
+                          },
+                          "Property": "Score vs Par"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "6eb5950fb04088d55bd3": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "e6708feba7aab603c250",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Recommendations"
+                            }
+                          },
+                          "Property": "Recommendation"
+                        }
+                      },
+                      "Function": 3
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {}
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

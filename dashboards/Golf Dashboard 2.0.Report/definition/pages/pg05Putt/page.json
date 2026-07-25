@@ -1,0 +1,31 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg05Putt",
+  "displayName": "Putt Dashboard",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "c36c181c2d2413a77fc6",
+      "target": "d8328644efdc5c5db4df",
+      "type": "DataFilter"
+    },
+    {
+      "source": "c36c181c2d2413a77fc6",
+      "target": "88b0abf641074e1cf6e6",
+      "type": "DataFilter"
+    },
+    {
+      "source": "d8328644efdc5c5db4df",
+      "target": "81415ea7812cb6749eb2",
+      "type": "DataFilter"
+    },
+    {
+      "source": "d8328644efdc5c5db4df",
+      "target": "4005bbcc92015b31d974",
+      "type": "NoFilter"
+    }
+  ]
+}

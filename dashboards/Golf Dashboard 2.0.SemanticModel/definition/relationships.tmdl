@@ -1,0 +1,254 @@
+relationship cdca3855-96e0-4ec9-97e0-87677f24adc8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Handicap.Date
+	toColumn: LocalDateTable_f25e2448-9936-43d0-9939-97a6485570f6.Date
+
+relationship 7b1e7703-dfb5-455b-8b18-201012df9a82
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Golf Log by Hole'.Date
+	toColumn: LocalDateTable_a091dc8d-1eb8-4bd3-b0b4-1cce0a5f94f6.Date
+
+relationship 65923dd9-4115-4f65-8c5d-a817159cd67f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Date Table'.Date
+	toColumn: LocalDateTable_1324f03d-1919-43c4-b1e2-dd61d4849dd6.Date
+
+relationship d35b6f01-3c7c-9212-8ae7-830af982dd99
+	fromColumn: 'Range Stats'.'Club Type'
+	toColumn: ClubLookup.Club
+
+relationship d9cfd57c-9a85-ac8e-97dc-cbb77a836e1b
+	fromColumn: LaunchDirectionGraph.Club
+	toColumn: ClubLookup.Club
+
+relationship 94857f1b-deaf-787d-3c21-9b0fdb2344ba
+	fromColumn: LaunchAngleGraph.Club
+	toColumn: ClubLookup.Club
+
+relationship 0d06fda6-f51f-461d-ad8f-3fd64d31ddf9
+	fromColumn: ApexGraph.Club
+	toColumn: ClubLookup.Club
+
+relationship cd33c57f-2408-dbf0-58af-930d4fc74a20
+	fromColumn: ClubDescentFlight.Club
+	toColumn: ClubLookup.Club
+
+relationship 6a2755c1-08bb-434d-bad5-776e1178e2aa
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Range Stats'.Date
+	toColumn: LocalDateTable_f96572a3-679a-4643-9e56-ffc714fa7046.Date
+
+relationship bd172cf0-7507-472d-bd28-bd364c89678b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: clutch_score_analysis.Date
+	toColumn: LocalDateTable_f7926181-0efd-463e-9fc8-ebb868617894.Date
+
+relationship 0d6b5848-6378-4a4c-bbf7-1e12c3de147f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Golf Log'.Date
+	toColumn: LocalDateTable_dfdc2824-cac3-4e81-b350-745efe4e6818.Date
+
+relationship 43c33fdc-c4d9-41e2-87be-88e514f2895f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'GIR Log'.Date
+	toColumn: LocalDateTable_f53b30ec-812d-4ecc-8ace-81abae279ca8.Date
+
+relationship 6dcb3a52-e978-44f9-8660-39896063b5bf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Putt Log'.Date
+	toColumn: LocalDateTable_0ea3623d-79fe-44dc-be38-455e2fa266d4.Date
+
+relationship 84445b61-8916-4525-954a-29cbc55ad0d5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Golf Scores'.Date
+	toColumn: LocalDateTable_7875566d-8384-456a-963a-0443fa342214.Date
+
+relationship 1bb163fa-69f3-4313-993a-51557150d50c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Fairway Log'.Date
+	toColumn: LocalDateTable_23b67ad6-a713-4f4e-ab04-2442997e7aea.Date
+
+relationship b3cd729e-df60-4c5d-bfbc-6cfb24e7bff2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: strokes_gained_summary.Date
+	toColumn: LocalDateTable_ecacfbdd-6691-4727-a0dc-5be81039820d.Date
+
+relationship 75d0ac52-bff9-4c81-affb-c561fe6e5b2f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: clustered_rounds.Date
+	toColumn: LocalDateTable_5abcb086-89f7-431f-a7d7-b55152575b61.Date
+
+relationship 75140010-5fb5-4f22-9cdd-903d36035db7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Putt Log by Hole'.Date
+	toColumn: LocalDateTable_eff1f61f-27ef-43c8-bd57-82bc851ea3c1.Date
+
+relationship 07c7a7b1-cb32-466b-a28d-03055e42b3e9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Fairway Log by Hole'.Date
+	toColumn: LocalDateTable_a5680f83-0786-4d6c-9a8b-85e073fcc68b.Date
+
+relationship 248625fc-29dd-4993-acf2-571b90813ead
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'GIR Log by Hole'.Date
+	toColumn: LocalDateTable_ccce49ed-62e5-44da-8529-9b09cee41aa5.Date
+
+relationship a3f0cea4-91f4-c7ed-284a-7bf6a536efd8
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Golf Log'.RoundKey
+	toColumn: 'Round Table'.RoundKey
+
+relationship 89f37b56-1923-37c9-5508-5698e5348a7f
+	fromColumn: 'GIR Log'.RoundKey
+	toColumn: 'Round Table'.RoundKey
+
+relationship 10a8ef67-a529-9c8e-d562-d92f173b80d1
+	fromColumn: 'Putt Log by Hole'.RoundKey
+	toColumn: 'Round Table'.RoundKey
+
+relationship 1814c13b-9385-76d4-5806-2afeaaac2391
+	crossFilteringBehavior: bothDirections
+	fromColumn: Handicap.RoundKey
+	toColumn: 'Round Table'.RoundKey
+
+relationship 2ae56773-237f-6f22-43af-0b387deb2a73
+	fromColumn: 'Round Table'.Date
+	toColumn: 'Date Table'.Date
+
+relationship 974d67e5-dcfd-d5b4-bbf4-75e3a6cc6456
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Golf Log'.CourseHoleKey
+	toColumn: 'Course Stats'.CourseHoleKey
+
+relationship f73ff530-1254-75a0-a22d-c4bc9a9be939
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Golf Log by Hole'.RoundKey
+	toColumn: 'Round Table'.RoundKey
+
+relationship d438eeb4-0d92-eb13-c539-9eeb4be806d6
+	fromColumn: 'Fairway Log'.RoundKey
+	toColumn: 'Round Table'.RoundKey
+
+relationship db9ef3c4-f23e-70b9-81e0-10796999f5c0
+	fromColumn: 'Fairway Log by Hole'.RoundKey
+	toColumn: 'Round Table'.RoundKey
+
+relationship a24a80e2-7be0-337d-3a14-b19aecd7cb1f
+	fromColumn: 'GIR Log by Hole'.RoundKey
+	toColumn: 'Round Table'.RoundKey
+
+relationship 53792313-4e76-71f6-b33e-3a43d5d86037
+	fromColumn: 'Golf Log'.CourseHoleKey
+	toColumn: 'Hole Table'.CourseHoleKey
+
+relationship b3b1ae10-2bca-2acc-116e-01b4e5e92cff
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Putt Log'.CourseHoleKey
+	toColumn: 'Hole Table'.CourseHoleKey
+
+relationship 573f6d18-9616-e12c-56f4-a2a0be9905c5
+	fromColumn: 'GIR Log'.CourseHoleKey
+	toColumn: 'Hole Table'.CourseHoleKey
+
+relationship 980f61dc-48f2-c707-ecf5-22169f10321c
+	fromColumn: 'Fairway Log'.CourseHoleKey
+	toColumn: 'Hole Table'.CourseHoleKey
+
+relationship 02c132e8-a070-dab4-e35e-efc638df8d35
+	crossFilteringBehavior: bothDirections
+	fromColumn: Recommendations.CourseHoleKey
+	toColumn: 'Hole Table'.CourseHoleKey
+
+relationship 49602f64-8d06-4cad-a77e-b9a94430516f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Hole Table'.Date
+	toColumn: LocalDateTable_5ac7f6a0-bbd5-45a3-ac83-cad330d8ca3f.Date
+
+relationship e8a270ae-e520-104b-2a0e-02d6f7e9908b
+	fromColumn: 'Putt Log'.Course
+	toColumn: 'Course Table'.Course
+
+relationship 52b85ef2-b397-1278-87ad-f1190efbb101
+	fromColumn: 'Round Table'.Course
+	toColumn: 'Course Table'.'Short Course'
+
+relationship 494ec762-dfaf-507d-2c51-6a062dde9a06
+	isActive: false
+	fromColumn: 'Hole Table'.'Short Course'
+	toColumn: 'Course Table'.'Short Course'
+
+relationship f9050c6e-7747-4030-a7c7-a1c20601339f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Hole Log'.Date
+	toColumn: LocalDateTable_6690f925-4aac-4115-992a-c636a0e99174.Date
+
+relationship AutoDetected_4cc4bae7-62eb-48d0-8574-590ed3dbb55a
+	fromColumn: 'Hole Log'.CourseHoleKey
+	toColumn: 'Course Stats'.CourseHoleKey
+
+relationship AutoDetected_feaca704-d3bf-4e8c-b457-9e169b16066c
+	isActive: false
+	fromColumn: 'Golf Log'.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_fcc00870-4f7b-404a-8430-cc8e4c56a1ca
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Handicap.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_d4cb0b32-d761-446c-b702-06c7d33049c1
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Golf Log by Hole'.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_998da576-afd5-4c33-a0da-2b520e245bf6
+	isActive: false
+	fromColumn: 'Putt Log'.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_79576816-cffa-49b0-817a-4fdfbbe414d1
+	isActive: false
+	fromColumn: 'Fairway Log'.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_c9962347-8dc1-4a18-8bf6-8b4d523aa0bd
+	isActive: false
+	fromColumn: 'GIR Log'.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_500d3498-8326-4f1e-8467-80f2133e2a83
+	isActive: false
+	fromColumn: 'Putt Log by Hole'.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_7987c7ed-adf0-4a4d-ab4b-1a3162c25ffa
+	isActive: false
+	fromColumn: 'Fairway Log by Hole'.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_a06bb250-baf2-4653-868b-6f40abf6c7b7
+	isActive: false
+	fromColumn: 'GIR Log by Hole'.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_162d34db-c778-4eac-afe0-99378e153d27
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: clutch_score_analysis.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship AutoDetected_bd0968c4-4743-4749-bc9e-1f7534fc6f2d
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: clustered_rounds.RoundKey
+	toColumn: strokes_gained_summary.RoundKey
+
+relationship f03625fb-baaf-4866-9175-20df8af1f940
+	crossFilteringBehavior: bothDirections
+	fromColumn: strokes_gained_summary.RoundKey
+	toColumn: 'Round Table'.RoundKey
+

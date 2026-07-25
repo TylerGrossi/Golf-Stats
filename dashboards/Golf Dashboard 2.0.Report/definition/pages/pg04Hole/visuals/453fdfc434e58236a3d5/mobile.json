@@ -1,0 +1,321 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
+  "position": {
+    "x": 0,
+    "y": 231,
+    "z": 18003,
+    "height": 273,
+    "width": 324
+  },
+  "objects": {
+    "values": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "9D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "columnHeaders": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "9D"
+              }
+            }
+          },
+          "autoSizeColumnWidth": {
+            "expr": {
+              "Literal": {
+                "Value": "true"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "36D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Hole Table.Hole Number"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "25D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Fairway Log.Fairway Score1"
+        }
+      },
+      {
+        "properties": {},
+        "selector": {
+          "metadata": "Sum(Putt Log.Putt Score)"
+        }
+      },
+      {
+        "properties": {},
+        "selector": {
+          "metadata": "Fairway Log.Fairway Score"
+        }
+      },
+      {
+        "properties": {},
+        "selector": {
+          "metadata": "Sum(Fairway Log.Fairway % by Hole)"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "34D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.GIR Score"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "100.11857051228785D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Course Table.Short Course"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "42D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.GIR % by Hole"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "31D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Sum(Course Stats.Hole Par)"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "27D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.GIR Score1"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "26D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Golf Log.Over Par by Hole"
+        }
+      }
+    ],
+    "columnFormatting": [
+      {
+        "properties": {
+          "labelPrecision": {
+            "expr": {
+              "Literal": {
+                "Value": "0L"
+              }
+            }
+          },
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Sum(Fairway Log.Fairway % by Hole)"
+        }
+      },
+      {
+        "properties": {
+          "labelPrecision": {
+            "expr": {
+              "Literal": {
+                "Value": "0L"
+              }
+            }
+          },
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.GIR % by Hole"
+        }
+      },
+      {
+        "properties": {
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.GIR Score"
+        }
+      },
+      {
+        "properties": {
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Fairway Log.Fairway Score"
+        }
+      },
+      {
+        "properties": {
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Golf Log.Over Par by Hole"
+        }
+      },
+      {
+        "properties": {
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.GIR Score1"
+        }
+      },
+      {
+        "properties": {
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Hole Table.Hole Number"
+        }
+      },
+      {
+        "properties": {
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Left'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Course Table.Short Course"
+        }
+      },
+      {
+        "properties": {
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Sum(Course Stats.Hole Par)"
+        }
+      }
+    ],
+    "total": [],
+    "grid": []
+  }
+}

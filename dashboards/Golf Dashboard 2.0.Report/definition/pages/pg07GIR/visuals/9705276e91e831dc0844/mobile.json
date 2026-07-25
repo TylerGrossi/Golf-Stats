@@ -1,0 +1,100 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
+  "position": {
+    "x": 0,
+    "y": 479,
+    "z": 10000,
+    "height": 95,
+    "width": 324,
+    "tabOrder": 10000
+  },
+  "objects": {
+    "values": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "columnHeaders": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "117.25514789037163D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.Short Course"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "49.35395598810517D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.Hole Number"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "48.815487871911785D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "GIR Log.GIR Score"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "86.34919860563767D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Sum(GIR Log.GIR % by Hole)"
+        }
+      }
+    ],
+    "columnFormatting": [],
+    "total": [],
+    "grid": []
+  }
+}

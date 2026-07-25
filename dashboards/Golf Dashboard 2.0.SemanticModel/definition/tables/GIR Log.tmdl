@@ -1,0 +1,170 @@
+table 'GIR Log'
+	lineageTag: 4120bf93-670b-4176-8742-376cc73b0518
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8c015342-e840-4ebd-8be6-49f493c381d8
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 43c33fdc-c4d9-41e2-87be-88e514f2895f
+			defaultHierarchy: LocalDateTable_f53b30ec-812d-4ecc-8ace-81abae279ca8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Course
+		dataType: string
+		lineageTag: 27502e74-1b43-4dda-9eb2-fd508ca7828b
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column GIR
+		dataType: int64
+		formatString: 0
+		lineageTag: 6df430ab-487a-4a7d-9665-3128946d6d2e
+		summarizeBy: none
+		sourceColumn: GIR
+
+		annotation SummarizationSetBy = User
+
+	column Hole
+		dataType: string
+		lineageTag: a29b9141-74d2-4a4d-a43b-d8c212286482
+		summarizeBy: none
+		sourceColumn: Hole
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'GIR Score'
+		dataType: string
+		lineageTag: 41483cc0-844a-4f66-add3-a02cb4ad27dc
+		summarizeBy: none
+		sourceColumn: GIR Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column CourseHoleKey
+		dataType: string
+		lineageTag: 4985e169-b1d0-4ea7-adfa-dda7c155b8f3
+		summarizeBy: none
+		sourceColumn: CourseHoleKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundKey
+		dataType: string
+		lineageTag: 872a403a-2bf7-418c-ae38-df006acd4799
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Course'
+		dataType: string
+		lineageTag: a4318f21-7386-4815-bb22-179fec6b3ee7
+		summarizeBy: none
+		sourceColumn: Short Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hole Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: a7bf6524-d699-4b5d-85a2-fa7fdb52d3d6
+		summarizeBy: sum
+		sourceColumn: Hole Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'GIR % by Hole'
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b5e2e1b7-b0bb-4558-a791-f09587bb699b
+		summarizeBy: none
+		sourceColumn: GIR % by Hole
+
+		annotation SummarizationSetBy = User
+
+	column Golfer
+		dataType: string
+		lineageTag: d5fe75d6-f7a7-4818-ae5d-faac75648657
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column GIRHitFlg
+		dataType: int64
+		formatString: 0
+		lineageTag: 9e718431-50ca-4293-bdca-ac08e02465a0
+		summarizeBy: sum
+		sourceColumn: GIRHitFlg
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'GIR %'
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: aec57f7c-0ad9-4cb6-b2f6-1008c1e486c5
+		summarizeBy: sum
+		sourceColumn: GIR %
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'GIR Log' = m
+		mode: import
+		source = ```
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"GIR Log_Sheet" = Source{[Item="GIR Log",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"GIR Log_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type any}, {"Course", type text}, {"GIR", type any}, {"Hole 1", type any}, {"Hole 2", type any}, {"Hole 3", type any}, {"Hole 4", type any}, {"Hole 5", type any}, {"Hole 6", type any}, {"Hole 7", type any}, {"Hole 8", type any}, {"Hole 9", type any}, {"Hole 10", type any}, {"Hole 11", type any}, {"Hole 12", type any}, {"Hole 13", type any}, {"Hole 14", type any}, {"Hole 15", type any}, {"Hole 16", type any}, {"Hole 17", type any}, {"Hole 18", type any}}),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(#"Changed Type",3),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Removed Bottom Rows", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Unpivoted Only Selected Columns" = Table.Unpivot(#"Removed Blank Rows", {"Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5", "Hole 6", "Hole 7", "Hole 8", "Hole 9", "Hole 10", "Hole 11", "Hole 12", "Hole 13", "Hole 14", "Hole 15", "Hole 16", "Hole 17", "Hole 18"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Only Selected Columns",{{"Attribute", "Hole"}, {"Value", "GIR Score"}}),
+				    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "Hole Number", each Number.FromText(Text.Replace([Hole], "Hole ", ""))),
+				    #"Added Custom1" = Table.AddColumn(#"Renamed Columns", "CourseHoleKey", each [Course] & " " & [Hole]),
+				    #"Added Custom2" = Table.AddColumn(#"Added Custom1","RoundKey",each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course]),
+				    #"Added Custom3" = Table.AddColumn(#"Added Custom2", "Hole Number", each Number.From(Text.Middle([Hole], 5))),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Added Custom3", "Course", "Course - Copy"),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Duplicated Column",{"Date", "Course", "Course - Copy", "GIR", "Hole", "GIR Score", "CourseHoleKey", "RoundKey", "Hole Number"}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Reordered Columns",{{"Course - Copy", "Short Course"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns1","Wailea Golf Club Emerald Course","Wailea Emerald ",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Wailea Golf Club Gold Course","Wailea Gold",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Ka'anapali Golf Resort Royal Course","Ka'anapali Royal ",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Sebonack Golf Club","Sebonack",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","Brentwood Country Club","Brentwood",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","Wind Watch Hamlet Course","Wind Watch",Replacer.ReplaceText,{"Short Course"}),
+				    #"Sorted Rows" = Table.Sort(#"Replaced Value5",{{"Short Course", Order.Descending}}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Sorted Rows","Willow Creek Hamlet Course","Willow Creek",Replacer.ReplaceText,{"Short Course"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6","Middle Island Country Club - Oak and Spruce","Middle Island",Replacer.ReplaceText,{"Short Course"}),
+				    #"Sorted Rows1" = Table.Sort(#"Replaced Value7",{{"Date", Order.Descending}}),
+				    #"Added Custom4" = Table.AddColumn(#"Sorted Rows1", "Custom", each if List.Contains({"←","→","↓","↑","0"}, [GIR Score]) then 0 else 1),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom4",{{"Custom", Percentage.Type}}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Changed Type1",{{"Custom", "GIR % by Hole"}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns2",{{"Date", type date}, {"GIR", Int64.Type}, {"GIR Score", type any}, {"CourseHoleKey", type text}, {"RoundKey", type text}, {"Hole Number", Int64.Type}}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Changed Type2","Spring Lake Thunderbird","Spring Lake",Replacer.ReplaceText,{"Short Course"}),
+				    #"Added Custom5" = Table.AddColumn(#"Replaced Value8", "GIRHitFlg", each let val = Text.Trim(Text.From([GIR Score])) 
+				in
+				    if val = "1" then 1
+				    else if val = "NC" or val = "" then null
+				    else 0),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Added Custom5",{"Golfer", "Date", "Course", "Short Course", "GIR", "Hole", "GIR Score", "GIRHitFlg", "CourseHoleKey", "RoundKey", "Hole Number", "GIR % by Hole"}),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Reordered Columns1",{{"GIRHitFlg", Int64.Type}, {"GIR %", Percentage.Type}}),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Changed Type3","NC","–",Replacer.ReplaceValue,{"GIR Score"})
+				in
+				    #"Replaced Value9"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

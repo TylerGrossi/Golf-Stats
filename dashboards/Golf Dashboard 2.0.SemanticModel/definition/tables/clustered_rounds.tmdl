@@ -1,0 +1,238 @@
+table clustered_rounds
+	lineageTag: 344b2092-3c63-45ea-827c-e88ab51951ee
+
+	column Date
+		dataType: dateTime
+		formatString: mmm d, yyyy
+		lineageTag: d0b700b3-f21e-45f5-b8d0-a27e73dbc300
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 75d0ac52-bff9-4c81-affb-c561fe6e5b2f
+			defaultHierarchy: LocalDateTable_5abcb086-89f7-431f-a7d7-b55152575b61.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Course
+		dataType: string
+		lineageTag: ca4040c5-20b5-476d-970e-5df79f19739d
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalPutts
+		dataType: int64
+		formatString: 0
+		lineageTag: f4209361-a5be-44b6-9efd-8145049e5ea8
+		summarizeBy: sum
+		sourceColumn: TotalPutts
+
+		annotation SummarizationSetBy = Automatic
+
+	column GIR%
+		dataType: double
+		lineageTag: dee951a4-0f31-4ab1-8605-ce1880c5b9d3
+		summarizeBy: sum
+		sourceColumn: GIR%
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Fairway%
+		dataType: double
+		lineageTag: d4245614-9153-4341-b6e2-b7f13a955f8b
+		summarizeBy: sum
+		sourceColumn: Fairway%
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Golfer
+		dataType: string
+		lineageTag: c0398f70-4a11-4d2c-8bad-1a7d0d5b8273
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundKey
+		dataType: string
+		lineageTag: 355e7a8d-faeb-47e9-b4d1-1b1eb81a78df
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column UpDown%
+		dataType: double
+		lineageTag: 914943ac-3bf8-4c39-89f0-e1b1eebbe6e0
+		summarizeBy: sum
+		sourceColumn: UpDown%
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column FwyOpps
+		dataType: int64
+		formatString: 0
+		lineageTag: c56a5902-9ab8-4909-a723-950857b74d9d
+		summarizeBy: sum
+		sourceColumn: FwyOpps
+
+		annotation SummarizationSetBy = Automatic
+
+	column GIRopps
+		dataType: int64
+		formatString: 0
+		lineageTag: 654b23c2-6d5d-4f54-a0fa-93236f14434a
+		summarizeBy: sum
+		sourceColumn: GIRopps
+
+		annotation SummarizationSetBy = Automatic
+
+	column UpDownOpps
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a43252c-af3b-424f-b67e-ac319d4943ad
+		summarizeBy: sum
+		sourceColumn: UpDownOpps
+
+		annotation SummarizationSetBy = Automatic
+
+	column z_Driving
+		dataType: double
+		lineageTag: 6cb38d17-f452-458a-8e21-b7e2921e42e2
+		summarizeBy: sum
+		sourceColumn: z_Driving
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column z_Irons
+		dataType: double
+		lineageTag: b1c8d60a-908b-4651-997d-588a508bffcc
+		summarizeBy: sum
+		sourceColumn: z_Irons
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column z_Wedges
+		dataType: double
+		lineageTag: 04ab2a12-6d02-4997-a45b-5fbbf88b68ed
+		summarizeBy: sum
+		sourceColumn: z_Wedges
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column z_Putting
+		dataType: double
+		lineageTag: 1a0f08ef-4290-4215-8199-5bcaf573afda
+		summarizeBy: sum
+		sourceColumn: z_Putting
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Driving
+		dataType: string
+		lineageTag: c0e8e356-8b19-4792-a6cc-ed7be536bf2b
+		summarizeBy: none
+		sourceColumn: Driving
+
+		annotation SummarizationSetBy = Automatic
+
+	column Irons
+		dataType: string
+		lineageTag: 21b8ff00-c34a-4fe3-b056-0984e6ecf5bc
+		summarizeBy: none
+		sourceColumn: Irons
+
+		annotation SummarizationSetBy = Automatic
+
+	column Wedges
+		dataType: string
+		lineageTag: a4734d58-833e-4675-b242-abdb1b53277b
+		summarizeBy: none
+		sourceColumn: Wedges
+
+		annotation SummarizationSetBy = Automatic
+
+	column Putting
+		dataType: string
+		lineageTag: 694e7c8d-0c12-478c-a129-b6b43092ca54
+		summarizeBy: none
+		sourceColumn: Putting
+
+		annotation SummarizationSetBy = Automatic
+
+	column BestArea
+		dataType: string
+		lineageTag: 263a6925-d9c5-4d53-ac36-9ed60feab9d5
+		summarizeBy: none
+		sourceColumn: BestArea
+
+		annotation SummarizationSetBy = Automatic
+
+	column WorstArea
+		dataType: string
+		lineageTag: 0ba2c44e-60f0-442a-97a3-59a2c160312d
+		summarizeBy: none
+		sourceColumn: WorstArea
+
+		annotation SummarizationSetBy = Automatic
+
+	column BaselineRounds
+		dataType: int64
+		formatString: 0
+		lineageTag: aeb303b1-247c-4f4d-968f-7b2a54e96ae6
+		summarizeBy: sum
+		sourceColumn: BaselineRounds
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Course' = LOOKUPVALUE('Course Table'[Short Course], 'Course Table'[Course], clustered_rounds[Course])
+		dataType: string
+		lineageTag: af099574-c722-41e4-b524-d199aa6967b5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundNumber =
+			VAR g = 'clustered_rounds'[Golfer]
+			RETURN
+				RANKX(FILTER(ALL('clustered_rounds'), 'clustered_rounds'[Golfer] = g), 'clustered_rounds'[Date], , ASC, Dense)
+		dataType: int64
+		formatString: 0
+		lineageTag: c3d4e5f6-2222-4000-8000-000000000020
+		summarizeBy: none
+
+	partition clustered_rounds = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\derived\round_profiles.xlsx"), null, true),
+				    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Fairway%", Percentage.Type}, {"GIR%", Percentage.Type}, {"UpDown%", Percentage.Type}, {"Date", type date}, {"TotalPutts", Int64.Type}, {"FwyOpps", Int64.Type}, {"GIRopps", Int64.Type}, {"UpDownOpps", Int64.Type}, {"z_Driving", type number}, {"z_Irons", type number}, {"z_Wedges", type number}, {"z_Putting", type number}, {"Driving", type text}, {"Irons", type text}, {"Wedges", type text}, {"Putting", type text}, {"BestArea", type text}, {"WorstArea", type text}, {"BaselineRounds", Int64.Type}}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Changed Type","RoundKey",each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course])
+				in
+				    #"Inserted Merged Column"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,294 @@
+table 'Golf Log by Hole'
+	lineageTag: fbe0e830-7ac7-4e5b-8c5e-0694e6f95ca3
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 273577b3-790b-4394-a66c-3552d3436747
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 7b1e7703-dfb5-455b-8b18-201012df9a82
+			defaultHierarchy: LocalDateTable_a091dc8d-1eb8-4bd3-b0b4-1cce0a5f94f6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Course
+		dataType: string
+		lineageTag: d12d0cb8-0ce2-41e4-9c58-fe4d9490d904
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Score
+		dataType: int64
+		formatString: 0
+		lineageTag: 1cc58383-3df9-42a0-a1de-ec1041e88f9e
+		summarizeBy: sum
+		sourceColumn: Score
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column 1
+		dataType: int64
+		formatString: 0
+		lineageTag: 687d5f60-daf3-437b-8104-a05147fc169a
+		summarizeBy: none
+		sourceColumn: 1
+
+		annotation SummarizationSetBy = User
+
+	column 2
+		dataType: int64
+		formatString: 0
+		lineageTag: 1ce18ea0-939d-4c11-8508-0fb5f7254cf7
+		summarizeBy: none
+		sourceColumn: 2
+
+		annotation SummarizationSetBy = User
+
+	column 3
+		dataType: int64
+		formatString: 0
+		lineageTag: 2becba0c-e548-42d0-8ed0-c5a3cd792427
+		summarizeBy: none
+		sourceColumn: 3
+
+		annotation SummarizationSetBy = User
+
+	column 4
+		dataType: int64
+		formatString: 0
+		lineageTag: 203bec1e-ff75-4c2b-a8db-f41e72cd3819
+		summarizeBy: none
+		sourceColumn: 4
+
+		annotation SummarizationSetBy = User
+
+	column 5
+		dataType: int64
+		formatString: 0
+		lineageTag: a12ffb4b-deef-45fe-b705-8aded6f752e1
+		summarizeBy: none
+		sourceColumn: 5
+
+		annotation SummarizationSetBy = User
+
+	column 6
+		dataType: int64
+		formatString: 0
+		lineageTag: 3d459737-5dca-4111-b067-123a5c7c84dd
+		summarizeBy: none
+		sourceColumn: 6
+
+		annotation SummarizationSetBy = User
+
+	column 7
+		dataType: int64
+		formatString: 0
+		lineageTag: 116c4b24-2836-4fe4-af04-8af9463178ef
+		summarizeBy: none
+		sourceColumn: 7
+
+		annotation SummarizationSetBy = User
+
+	column 8
+		dataType: int64
+		formatString: 0
+		lineageTag: 75635f5c-2b6a-491e-9fe4-6c778a912864
+		summarizeBy: none
+		sourceColumn: 8
+
+		annotation SummarizationSetBy = User
+
+	column 9
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b50e1bb-a642-4e0f-adeb-a1e2e9db8d6c
+		summarizeBy: none
+		sourceColumn: 9
+
+		annotation SummarizationSetBy = User
+
+	column 10
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e27801f-ab12-40c2-89e3-1550466712ff
+		summarizeBy: none
+		sourceColumn: 10
+
+		annotation SummarizationSetBy = User
+
+	column 11
+		dataType: int64
+		formatString: 0
+		lineageTag: 450aef16-1103-4afc-ab73-309b946e6a01
+		summarizeBy: none
+		sourceColumn: 11
+
+		annotation SummarizationSetBy = User
+
+	column 12
+		dataType: int64
+		formatString: 0
+		lineageTag: 332bfd14-8bc3-4a55-a149-92ec4978943d
+		summarizeBy: none
+		sourceColumn: 12
+
+		annotation SummarizationSetBy = User
+
+	column 13
+		dataType: int64
+		formatString: 0
+		lineageTag: 58c57d9d-9c5e-4d5d-af40-766a71b1b77e
+		summarizeBy: none
+		sourceColumn: 13
+
+		annotation SummarizationSetBy = User
+
+	column 14
+		dataType: int64
+		formatString: 0
+		lineageTag: d56a01c1-8693-4cf0-9209-366a060f7def
+		summarizeBy: none
+		sourceColumn: 14
+
+		annotation SummarizationSetBy = User
+
+	column 15
+		dataType: int64
+		formatString: 0
+		lineageTag: e7be1bc9-f187-4cb5-9502-312c1daee939
+		summarizeBy: none
+		sourceColumn: 15
+
+		annotation SummarizationSetBy = User
+
+	column 16
+		dataType: int64
+		formatString: 0
+		lineageTag: b2e805fd-def8-4b23-861c-cd3b09ef22a9
+		summarizeBy: none
+		sourceColumn: 16
+
+		annotation SummarizationSetBy = User
+
+	column 17
+		dataType: int64
+		formatString: 0
+		lineageTag: fc64c766-fc91-4e0f-a26f-c7ecb4800d5b
+		summarizeBy: none
+		sourceColumn: 17
+
+		annotation SummarizationSetBy = User
+
+	column 18
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a33eca6-de1f-433a-9c85-0eedbf4e961a
+		summarizeBy: none
+		sourceColumn: 18
+
+		annotation SummarizationSetBy = User
+
+	column Putts
+		dataType: int64
+		formatString: 0
+		lineageTag: 8f33679d-8780-4f24-906d-2fcd343ecf80
+		summarizeBy: sum
+		sourceColumn: Putts
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fairways
+		dataType: int64
+		formatString: 0
+		lineageTag: ebf46592-b72e-4cef-8b2e-351ff6d0ed22
+		summarizeBy: sum
+		sourceColumn: Fairways
+
+		annotation SummarizationSetBy = Automatic
+
+	column GIR
+		dataType: int64
+		formatString: 0
+		lineageTag: 5db4c430-8b34-400b-9bbf-a03a06797fda
+		summarizeBy: sum
+		sourceColumn: GIR
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Par 3 Avg'
+		dataType: double
+		lineageTag: 3c7f8b40-47e2-4d75-b4ba-c5c6929f9e12
+		summarizeBy: none
+		sourceColumn: Par 3 Avg
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Par 4 Avg'
+		dataType: double
+		lineageTag: a6fea427-66a0-413f-8838-38da8207d919
+		summarizeBy: none
+		sourceColumn: Par 4 Avg
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Par 5 Avg'
+		dataType: double
+		lineageTag: 28ccfdbf-adf4-4442-b26e-8320c2139a43
+		summarizeBy: none
+		sourceColumn: Par 5 Avg
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RoundKey
+		dataType: string
+		lineageTag: cdc0e206-a5a5-43b5-9dc1-1b94777a0be0
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Golfer
+		dataType: string
+		lineageTag: f792befd-baf7-43d5-b9b3-8d7cea184962
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Golf Log by Hole' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"Golf Log_Sheet" = Source{[Item="Golf Log",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Golf Log_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type any}, {"Course", type text}, {"Score", type any}, {"Hole 1", Int64.Type}, {"Hole 2", Int64.Type}, {"Hole 3", Int64.Type}, {"Hole 4", Int64.Type}, {"Hole 5", Int64.Type}, {"Hole 6", Int64.Type}, {"Hole 7", Int64.Type}, {"Hole 8", Int64.Type}, {"Hole 9", Int64.Type}, {"Hole 10", Int64.Type}, {"Hole 11", Int64.Type}, {"Hole 12", Int64.Type}, {"Hole 13", Int64.Type}, {"Hole 14", Int64.Type}, {"Hole 15", Int64.Type}, {"Hole 16", Int64.Type}, {"Hole 17", Int64.Type}, {"Hole 18", Int64.Type}, {"Par 3 Avg", type number}, {"Par 4 Avg", type number}, {"Par 5 Avg", type number}}),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Changed Type", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(#"Removed Blank Rows",3),
+				    #"Added Custom" = Table.AddColumn(#"Removed Bottom Rows","RoundKey",each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course]),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Custom",{{"Hole 10", "10"}, {"Hole 11", "11"}, {"Hole 3", "3"}, {"Hole 2", "2"}, {"Hole 1", "1"}, {"Hole 4", "4"}, {"Hole 5", "5"}, {"Hole 6", "6"}, {"Hole 7", "7"}, {"Hole 8", "8"}, {"Hole 9", "9"}, {"Hole 12", "12"}, {"Hole 13", "13"}, {"Hole 14", "14"}, {"Hole 15", "15"}, {"Hole 16", "16"}, {"Hole 17", "17"}, {"Hole 18", "18"}}),
+				    #"Sorted Rows" = Table.Sort(#"Renamed Columns",{{"Date", Order.Descending}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Sorted Rows",{{"Date", type date}, {"Putts", Int64.Type}, {"Fairways", Int64.Type}, {"GIR", Int64.Type}, {"RoundKey", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

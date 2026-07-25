@@ -1,0 +1,28 @@
+table 'Date Table'
+	lineageTag: 804a99bb-3429-4980-b86b-25c630d9a26b
+
+	column Date
+		formatString: mmmm d\, yyyy
+		lineageTag: e57c67a7-4641-4cef-9160-1bfef6649cd8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: 65923dd9-4115-4f65-8c5d-a817159cd67f
+			defaultHierarchy: LocalDateTable_1324f03d-1919-43c4-b1e2-dd61d4849dd6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	partition 'Date Table' = calculated
+		mode: import
+		source = ```
+				CALENDAR(MIN('Golf Log'[Date]), MAX('Golf Log'[Date]))
+				
+				```
+
+	annotation PBI_Id = 3054610f83f24dc5b6882e609afb460a
+

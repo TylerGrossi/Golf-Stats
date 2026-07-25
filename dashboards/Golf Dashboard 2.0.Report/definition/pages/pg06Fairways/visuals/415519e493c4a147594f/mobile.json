@@ -1,0 +1,136 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainerMobileState/2.6.0/schema.json",
+  "position": {
+    "x": 0,
+    "y": 478,
+    "z": 10000,
+    "height": 95,
+    "width": 324,
+    "tabOrder": 10000
+  },
+  "objects": {
+    "values": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "columnHeaders": [
+      {
+        "properties": {
+          "fontSize": {
+            "expr": {
+              "Literal": {
+                "Value": "8D"
+              }
+            }
+          },
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Center'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "columnWidth": [
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "131.31901043593575D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Fairway Log.Short Course"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "42.026615699814016D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Fairway Log.Hole Number"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "70.90463902864697D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Fairway Log.Fairway Score"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "83.66895423615281D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Sum(Fairway Log.Fairway % by Hole)"
+        }
+      },
+      {
+        "properties": {
+          "value": {
+            "expr": {
+              "Literal": {
+                "Value": "106D"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Course Table.Short Course"
+        }
+      }
+    ],
+    "columnFormatting": [
+      {
+        "properties": {
+          "alignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Left'"
+              }
+            }
+          }
+        },
+        "selector": {
+          "metadata": "Course Table.Short Course"
+        }
+      }
+    ],
+    "total": [],
+    "grid": []
+  }
+}

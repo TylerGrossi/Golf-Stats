@@ -1,0 +1,41 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg03Round",
+  "displayName": "Round Dashboard",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "cb978fdd260e296cf205",
+      "target": "2deb4a73ab7b49f349ae",
+      "type": "DataFilter"
+    },
+    {
+      "source": "1185f34a85b5fec0d0b1",
+      "target": "02ba34a455e61dbd818c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1185f34a85b5fec0d0b1",
+      "target": "b6c0330d92d4e1295a50",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1185f34a85b5fec0d0b1",
+      "target": "e2aa96f2c15273a89eb9",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1185f34a85b5fec0d0b1",
+      "target": "43ecf9e751a3f9eacd0f",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1185f34a85b5fec0d0b1",
+      "target": "cbcea6fccef9170566a9",
+      "type": "NoFilter"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg07GIR",
+  "displayName": "GIR Dashboard",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "9705276e91e831dc0844",
+      "target": "a931ba5f4c6189049c26",
+      "type": "DataFilter"
+    },
+    {
+      "source": "9705276e91e831dc0844",
+      "target": "317288914fa633d49b8e",
+      "type": "DataFilter"
+    },
+    {
+      "source": "a931ba5f4c6189049c26",
+      "target": "61d1daf660b263a8deea",
+      "type": "DataFilter"
+    },
+    {
+      "source": "3eadbbe85de01ab44994",
+      "target": "466bab8c7950251a4ec9",
+      "type": "NoFilter"
+    }
+  ]
+}

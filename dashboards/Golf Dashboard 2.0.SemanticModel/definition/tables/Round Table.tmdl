@@ -1,0 +1,45 @@
+table 'Round Table'
+	lineageTag: d5fb8aa1-3980-4345-bc8f-94f4aa1a6448
+
+	column Course
+		lineageTag: 1a082435-b388-4b14-abb7-b2a1eb14810c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Course]
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundKey
+		lineageTag: 078f6f2a-3147-409f-ad36-e60ad4d81b3d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Golf Log[RoundKey]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		formatString: Long Date
+		lineageTag: 734690d1-5eb9-46f8-966b-037bee78abe9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition 'Round Table' = calculated
+		mode: import
+		source = ```
+				
+				SUMMARIZE(
+				    'Golf Log',
+				    'Golf Log'[RoundKey],
+				    "Date", MIN('Golf Log'[Date]),
+				    "Course", MIN('Golf Log'[Short Course])
+				)
+				
+				```
+
+	annotation PBI_Id = 69a8d5b876f94b4bba82766c6bcaaa31
+

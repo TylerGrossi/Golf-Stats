@@ -1,0 +1,54 @@
+table club_ranges
+	lineageTag: f46f28b3-ccba-4ed8-8827-bd933560bcf9
+
+	column Club
+		dataType: string
+		lineageTag: d7756726-a447-4eaa-9dfd-9810a9c1f1cb
+		summarizeBy: none
+		sourceColumn: Club
+
+		annotation SummarizationSetBy = Automatic
+
+	column Lower
+		dataType: double
+		lineageTag: 43b5388b-1098-4d17-a0ad-56423b28eaae
+		summarizeBy: sum
+		sourceColumn: Lower
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Upper
+		dataType: double
+		lineageTag: d0f053e2-86a7-4e3b-a595-b05cbbfc8bda
+		summarizeBy: sum
+		sourceColumn: Upper
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Range
+		dataType: string
+		lineageTag: 872b6172-fdcc-4cbc-8043-e885cb6fa8c2
+		summarizeBy: none
+		sourceColumn: Range
+
+		annotation SummarizationSetBy = Automatic
+
+	partition club_ranges = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\derived\club_ranges.xlsx"), null, true),
+				    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Club", type text}, {"Lower", type number}, {"Upper", type number}, {"Range", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,416 @@
+table 'Hole Log'
+	lineageTag: c75c2cc7-0dc2-496f-9866-cd5a675e69e7
+
+	measure 'GIR Average Display' =
+			
+			VAR _avgGIR =
+			    AVERAGEX(
+			        FILTER(
+			            'Hole Log',
+			            NOT(ISBLANK('Hole Log'[GIR])) &&
+			            'Hole Log'[GIR] <> "NC"
+			        ),
+			        SWITCH(
+			            TRUE(),
+			            'Hole Log'[GIR] = "✓", 1,
+			            'Hole Log'[GIR] IN {"←","↑","→","↓","✗","v"}, 0,
+			            0
+			        )
+			    )
+			RETURN
+			IF(ISBLANK(_avgGIR), "N/A", _avgGIR)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: f71dada6-bb65-46bb-9d73-f0704674344b
+
+	measure 'Fairway Average Display' =
+			
+			VAR _avgFairways =
+			    AVERAGEX(
+			        FILTER(
+			            'Hole Log',
+			            NOT(ISBLANK('Hole Log'[Fairways])) &&
+			            'Hole Log'[Fairways] <> "NC"
+			        ),
+			        SWITCH(
+			            TRUE(),
+			            'Hole Log'[Fairways] = "✓", 1,
+			            'Hole Log'[Fairways] IN {"←","↑","→","↓","✗"}, 0,
+			            0
+			        )
+			    )
+			RETURN
+			IF(ISBLANK(_avgFairways), "N/A", _avgFairways)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5f67322d-e4dc-435f-a0cd-d9842398a7c7
+
+	measure 'Scrambling %' = ```
+			
+			-- 1. Count holes where the GIR is 0, ✗, or an arrow
+			VAR TotalMisses = 
+			    CALCULATE(
+			        COUNTROWS('Hole Log'),
+			        'Hole Log'[GIR] IN {"0", "✗", "←", "↓", "→", "↑"}
+			    )
+			
+			-- 2. Count how many of those specific misses resulted in Par or better
+			VAR ParsSaved = 
+			    CALCULATE(
+			        COUNTROWS('Hole Log'),
+			        'Hole Log'[GIR] IN {"0", "✗", "←", "↓", "→", "↑"},
+			        'Hole Log'[Hole Score] <= 'Hole Log'[Par]
+			    )
+			
+			-- 3. Divide Saves by Misses to get the true percentage
+			RETURN
+			DIVIDE(ParsSaved, TotalMisses, 0)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 23631882-bdeb-49ba-8258-ef993e144901
+
+	measure 'Hit %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] = "Hit"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 33dda70c-9edb-42ae-a72c-a7d99973c278
+
+	measure 'Left %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] = "Left"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 16895715-f383-4532-a179-2522c145ccd3
+
+	measure 'Right %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] = "Right"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: eede489c-9fd8-42c8-bdd2-57d0914ff2d6
+
+	measure 'Long %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] = "Long"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: fe72d717-94fe-4979-9885-80c7b73472f8
+
+	measure 'Short %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[Miss Direction] = "Short"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 85ac51b2-57c7-445f-95c5-8291f07241fb
+
+	measure 'GIR Hit %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] = "Hit"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 2c2657f9-e43a-4337-b8c7-226b7e8e93a0
+
+	measure 'GIR Left %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] = "Left"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 076f9012-756d-4046-80aa-20ee7882cd5d
+
+	measure 'GIR Right %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] = "Right"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 607fe808-51a9-4042-ad83-eb9fb076572a
+
+	measure 'GIR Long %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] = "Long"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ec9e838d-6b69-431f-9f2e-ab5cf4c83f9a
+
+	measure 'GIR Short %' =
+			
+			VAR _denom = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] IN {"Hit","Left","Right","Long","Short","Missed"}))
+			VAR _num = COUNTROWS(FILTER('Hole Log', 'Hole Log'[GIR Direction] = "Short"))
+			RETURN
+			IF(_denom = 0, "--", DIVIDE(_num, _denom, 0))
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 1098852d-95af-4512-81e8-e2d01e15be20
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 41588597-9ce2-4428-a52d-54c31049489b
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: f9050c6e-7747-4030-a7c7-a1c20601339f
+			defaultHierarchy: LocalDateTable_6690f925-4aac-4115-992a-c636a0e99174.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Fairways
+		dataType: string
+		lineageTag: 3cedc436-7455-49c5-b3f3-3fcec7df5a90
+		summarizeBy: none
+		sourceColumn: Fairways
+
+		annotation SummarizationSetBy = Automatic
+
+	column GIR
+		dataType: string
+		lineageTag: 3b511fa1-ce33-4ac9-b169-ba9fccc1f0da
+		summarizeBy: none
+		sourceColumn: GIR
+
+		annotation SummarizationSetBy = Automatic
+
+	column Golfer
+		dataType: string
+		lineageTag: fe25d4c7-d246-4ff6-ba90-7a8e39507f63
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column Course
+		dataType: string
+		lineageTag: 49aa03b8-d6fa-4167-8068-f915af6d3cb7
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Course'
+		dataType: string
+		lineageTag: ac4a8849-b647-4d0d-a696-f040714a3d2b
+		summarizeBy: none
+		sourceColumn: Short Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tees
+		dataType: string
+		lineageTag: 5f7dfa09-7293-43ec-ab81-8bafcd3706fd
+		summarizeBy: none
+		sourceColumn: Tees
+
+		annotation SummarizationSetBy = Automatic
+
+	column Score
+		dataType: int64
+		formatString: 0
+		lineageTag: 44a329ad-336b-45b4-a04a-2d022e9beade
+		summarizeBy: sum
+		sourceColumn: Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column Holes
+		dataType: string
+		lineageTag: ab18a37f-831f-4d12-a929-38e9c72ad371
+		summarizeBy: none
+		sourceColumn: Holes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hole
+		dataType: int64
+		formatString: 0
+		lineageTag: 0e779a1b-9199-42d5-ab09-2cf175fae549
+		summarizeBy: sum
+		sourceColumn: Hole
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Yardage
+		dataType: int64
+		formatString: 0
+		lineageTag: 40738232-48bf-49e8-92ac-b24d8177a839
+		summarizeBy: sum
+		sourceColumn: Yardage
+
+		annotation SummarizationSetBy = Automatic
+
+	column Handicap
+		dataType: int64
+		formatString: 0
+		lineageTag: ce2a6e66-7943-4984-8b14-17634d10147b
+		summarizeBy: sum
+		sourceColumn: Handicap
+
+		annotation SummarizationSetBy = Automatic
+
+	column Par
+		dataType: int64
+		formatString: 0
+		lineageTag: 4ac84a2a-6423-4313-9f82-48648f38062f
+		summarizeBy: sum
+		sourceColumn: Par
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hole Score'
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a9fdda8-4409-4405-ae8e-60ba37b3aec6
+		summarizeBy: sum
+		sourceColumn: Hole Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Score vs Par'
+		dataType: int64
+		formatString: 0
+		lineageTag: 865089d6-0385-4c3f-935f-8a9be1b8a242
+		summarizeBy: sum
+		sourceColumn: Score vs Par
+
+		annotation SummarizationSetBy = Automatic
+
+	column Type
+		dataType: string
+		lineageTag: f1fdce21-c671-4835-95cc-c158e17f1c64
+		summarizeBy: none
+		sourceColumn: Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Putts
+		dataType: int64
+		formatString: 0
+		lineageTag: 271fc1d9-1e4a-47af-bfce-041307610aeb
+		summarizeBy: sum
+		sourceColumn: Putts
+
+		annotation SummarizationSetBy = Automatic
+
+	column CourseHoleKey
+		dataType: string
+		lineageTag: f7a651f2-2383-493c-abd3-874cb6c7066d
+		summarizeBy: none
+		sourceColumn: CourseHoleKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Miss Direction' =
+			
+			SWITCH(
+			    TRUE(),
+			    'Hole Log'[Fairways] = "✓", "Hit",
+			    'Hole Log'[Fairways] = "←", "Left",
+			    'Hole Log'[Fairways] = "→", "Right",
+			    'Hole Log'[Fairways] = "↑", "Long",
+			    'Hole Log'[Fairways] = "↓", "Short",
+			    'Hole Log'[Fairways] = "✗", "Missed",
+			    'Hole Log'[Fairways] = "NC", "NC",
+			    "Other"
+			)
+		lineageTag: e4f06d4a-73db-4e56-b76b-c2c7e66f4241
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'GIR Direction' =
+			
+			SWITCH(
+			    TRUE(),
+			    'Hole Log'[GIR] = "✓", "Hit",
+			    'Hole Log'[GIR] = "✔", "Hit",
+			    'Hole Log'[GIR] = "v", "Hit",
+			    'Hole Log'[GIR] = "←", "Left",
+			    'Hole Log'[GIR] = "→", "Right",
+			    'Hole Log'[GIR] = "↑", "Long",
+			    'Hole Log'[GIR] = "↓", "Short",
+			    'Hole Log'[GIR] = "✗", "Missed",
+			    'Hole Log'[GIR] = "✘", "Missed",
+			    'Hole Log'[GIR] = "X", "Missed",
+			    'Hole Log'[GIR] = "NC", "NC",
+			    "Other"
+			)
+		lineageTag: 58250a9d-07e6-4a49-ae48-4627a6b42ced
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Hole Log' = m
+		mode: import
+		source = ```
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    Sheet1_Sheet = Source{[Item="Hole Log",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				
+				    // Initial typing (Fairways/GIR will be adjusted later)
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{
+				        {"Date", type date}, 
+				        {"Course", type text}, 
+				        {"Tees", type text}, 
+				        {"Score", Int64.Type}, 
+				        {"Hole", type text}, 
+				        {"Yardage", Int64.Type}, 
+				        {"Handicap", Int64.Type}, 
+				        {"Par", Int64.Type}, 
+				        {"Hole Score", Int64.Type}, 
+				        {"Score vs Par", Int64.Type}, 
+				        {"Type", type text}, 
+				        {"Putts", Int64.Type}, 
+				        {"Fairways", type text}, 
+				        {"GIR", type text}
+				    }),
+				
+				    // Remove blank rows
+				    #"Removed Blank Rows" = Table.SelectRows(#"Changed Type", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				
+				    // Create CourseHoleKey
+				    #"Inserted Merged Column" = Table.AddColumn(#"Removed Blank Rows", "CourseHoleKey", each Text.Combine({[Course], " ", [Holes]}), type text),
+				
+				    // Final type enforcement (optional)
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Inserted Merged Column",{
+				        {"Course", type text}, 
+				        {"Holes", type text}, 
+				        {"Short Course", type text}, 
+				        {"Fairways", type text}, 
+				        {"GIR", type text}
+				    }),
+				
+				    // ✅ Only replace 1 and 0 with symbols — ONCE
+				    #"Replaced Value_1toSymbol" = Table.ReplaceValue(#"Changed Type2","1","✓",Replacer.ReplaceText,{"Fairways", "GIR"}),
+				    #"Replaced Value_0toSymbol" = Table.ReplaceValue(#"Replaced Value_1toSymbol","0","✗",Replacer.ReplaceText,{"Fairways", "GIR"}),
+				
+				    // Sort (optional)
+				    #"Sorted Rows" = Table.Sort(#"Replaced Value_0toSymbol",{{"Date", Order.Descending}})
+				in
+				    #"Sorted Rows"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

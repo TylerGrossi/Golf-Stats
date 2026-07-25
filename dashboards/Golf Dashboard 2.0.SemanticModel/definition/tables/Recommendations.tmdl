@@ -1,0 +1,134 @@
+table Recommendations
+	lineageTag: 2099e851-f3f3-46a0-8707-2988dfb086e1
+
+	column Course
+		dataType: string
+		lineageTag: 53890903-5a30-43a4-a67c-b3af8bde9eb6
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hole
+		dataType: int64
+		formatString: 0
+		lineageTag: 20ad3b23-898b-4287-9578-485bad3874f8
+		summarizeBy: sum
+		sourceColumn: Hole
+
+		annotation SummarizationSetBy = Automatic
+
+	column Recommendation
+		dataType: string
+		lineageTag: 7c6f72f4-c4ae-4410-81be-67b7a87ef90c
+		summarizeBy: none
+		sourceColumn: Recommendation
+
+		annotation SummarizationSetBy = Automatic
+
+	column CourseHoleKey
+		dataType: string
+		lineageTag: a8277509-537c-410b-a292-0f8317c17061
+		summarizeBy: none
+		sourceColumn: CourseHoleKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tees
+		dataType: string
+		lineageTag: 9311e5dd-8010-4c65-a822-5cf6589ccf7d
+		summarizeBy: none
+		sourceColumn: Tees
+
+		annotation SummarizationSetBy = Automatic
+
+	column Par
+		dataType: int64
+		formatString: 0
+		lineageTag: a4b3a12a-9934-4a02-8ca1-47b2c2459db2
+		summarizeBy: sum
+		sourceColumn: Par
+
+		annotation SummarizationSetBy = Automatic
+
+	column Yardage
+		dataType: int64
+		formatString: 0
+		lineageTag: 4cf400a5-fab1-475a-95a9-11f5665bbd4e
+		summarizeBy: sum
+		sourceColumn: Yardage
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Target Distance'
+		dataType: int64
+		formatString: 0
+		lineageTag: d17af570-0e49-4c65-92dd-5bfb218ac72b
+		summarizeBy: sum
+		sourceColumn: Target Distance
+
+		annotation SummarizationSetBy = Automatic
+
+	column Putts
+		dataType: int64
+		formatString: 0
+		lineageTag: e8083bf7-838c-4d37-93d3-2f7d19f8d946
+		summarizeBy: sum
+		sourceColumn: Putts
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fairways
+		dataType: double
+		lineageTag: 17a3b1fa-ec3e-4b28-96f8-ed2545fcd504
+		summarizeBy: sum
+		sourceColumn: Fairways
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GIR
+		dataType: double
+		lineageTag: e634ad03-8184-493a-90fd-9dd403446672
+		summarizeBy: sum
+		sourceColumn: GIR
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Tee Recommendation'
+		dataType: string
+		lineageTag: 5c431438-7bac-41b8-ba79-c93b9de87829
+		summarizeBy: none
+		sourceColumn: Tee Recommendation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Approach Recommendation'
+		dataType: string
+		lineageTag: 0b20bdd4-493d-4ae3-8334-06e16e11c33b
+		summarizeBy: none
+		sourceColumn: Approach Recommendation
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Recommendations = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\derived\golf_recommendations.xlsx"), null, true),
+				    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Course", type text}, {"Hole", Int64.Type}, {"Recommendation", type text}, {"Tees", type text}, {"Yardage", Int64.Type}, {"Par", Int64.Type}, {"Target Distance", Int64.Type}, {"Putts", Int64.Type}, {"Fairways", Percentage.Type}, {"GIR", Percentage.Type}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type", "Custom", each [Course] & " Hole " & Text.From([Hole])),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Custom",{{"Custom", "CourseHoleKey"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns",{{"CourseHoleKey", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

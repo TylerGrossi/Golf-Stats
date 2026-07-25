@@ -1,0 +1,337 @@
+table Handicap
+	lineageTag: 3135e10a-de52-42ee-9277-428ca6792c21
+
+	measure 'Handicap Index' = ```
+			
+			VAR CurrentDate = MAX('Handicap'[Date])
+			VAR Ranked =
+			    ADDCOLUMNS(
+			        FILTER(
+			            'Handicap',
+			            NOT ISBLANK('Handicap'[Differential]) &&
+			            'Handicap'[Date] <= CurrentDate
+			        ),
+			        "Rank", RANKX(
+			            FILTER(
+			                'Handicap',
+			                NOT ISBLANK('Handicap'[Differential]) &&
+			                'Handicap'[Date] <= CurrentDate
+			            ),
+			            'Handicap'[Differential],
+			            ,
+			            ASC
+			        )
+			    )
+			VAR Top8 =
+			    FILTER(Ranked, [Rank] <= 8)
+			RETURN
+			    IF(
+			        COUNTROWS(Top8) >= 1,
+			        ROUND(AVERAGEX(Top8, 'Handicap'[Differential]), 1),
+			        BLANK()
+			    )
+			
+			
+			
+			```
+		lineageTag: ce224143-3239-4bf1-889a-0275925f9be8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Handicap Index Total' = ```
+			
+			VAR CurrentDate = CALCULATE(MAX('Handicap'[Date]))
+			VAR CurrentGolfer = MAX('Handicap'[Golfer])
+			
+			-- Step 1: Valid rounds up to current date
+			VAR ValidRounds =
+			    FILTER(
+			        ALL('Handicap'),
+			        NOT ISBLANK('Handicap'[Differential]) &&
+			        'Handicap'[Date] <= CurrentDate &&
+			        'Handicap'[Golfer] = CurrentGolfer
+			    )
+			
+			-- Step 2: Take latest 20 rounds
+			VAR Latest20 =
+			    TOPN(20, ValidRounds, 'Handicap'[Date], DESC)
+			
+			-- Step 3: Rank lowest differentials
+			VAR Ranked =
+			    ADDCOLUMNS(
+			        Latest20,
+			        "Rank",
+			        RANKX(Latest20, 'Handicap'[Differential], , ASC)
+			    )
+			
+			-- Step 4: Count number of rounds
+			VAR RoundCount = COUNTROWS(Ranked)
+			
+			-- Step 5: Scores to use
+			VAR ScoresToUse =
+			    SWITCH(
+			        TRUE(),
+			        RoundCount IN {1, 2}, 1,
+			        RoundCount = 3, 1,
+			        RoundCount = 4, 1,
+			        RoundCount = 5, 1,
+			        RoundCount = 6, 2,
+			        RoundCount IN {7, 8}, 2,
+			        RoundCount IN {9, 10}, 3,
+			        RoundCount IN {11, 12, 13, 14}, 4,
+			        RoundCount IN {15, 16}, 5,
+			        RoundCount IN {17, 18}, 6,
+			        RoundCount = 19, 7,
+			        RoundCount >= 20, 8,
+			        0
+			    )
+			
+			-- Step 6: WHS adjustment for 3+ rounds
+			VAR Adjustment =
+			    SWITCH(
+			        TRUE(),
+			        RoundCount = 3, -2,
+			        RoundCount = 4, -1,
+			        RoundCount = 5, 0,
+			        RoundCount = 6, -1,
+			        TRUE(), 0
+			    )
+			
+			-- Step 7: Filter top N differentials
+			VAR TopDiffs =
+			    FILTER(Ranked, [Rank] <= ScoresToUse)
+			
+			-- Step 8: Final calculation
+			RETURN
+			    IF(
+			        RoundCount >= 1,
+			        TRUNC(
+			            AVERAGEX(TopDiffs, 'Handicap'[Differential]) +
+			            IF(RoundCount >= 3, Adjustment, 0),
+			            1
+			        )
+			    )
+			
+			```
+		lineageTag: d30dd284-b2d6-4c40-a003-f5bbd41b9c7a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: mmmm d\, yyyy
+		lineageTag: 29b59948-7f41-4d6c-8541-031e8a1f3777
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: cdca3855-96e0-4ec9-97e0-87677f24adc8
+			defaultHierarchy: LocalDateTable_f25e2448-9936-43d0-9939-97a6485570f6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column Course
+		dataType: string
+		lineageTag: 1c2a6f37-b2d0-49de-bb65-6d0662577810
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tees
+		dataType: string
+		lineageTag: dbef26db-dbcd-44ee-ae4f-e0ad8f337e64
+		summarizeBy: none
+		sourceColumn: Tees
+
+		annotation SummarizationSetBy = Automatic
+
+	column Score
+		dataType: int64
+		formatString: 0
+		lineageTag: 5284f556-29ed-42c7-8418-06373ec5dce0
+		summarizeBy: none
+		sourceColumn: Score
+
+		annotation SummarizationSetBy = User
+
+	column Rating
+		dataType: double
+		lineageTag: 28b61596-6992-4839-bcb3-42f26dc622d5
+		summarizeBy: sum
+		sourceColumn: Rating
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Slope
+		dataType: int64
+		formatString: 0
+		lineageTag: 0d182281-e407-467e-a9a7-57597f698435
+		summarizeBy: sum
+		sourceColumn: Slope
+
+		annotation SummarizationSetBy = Automatic
+
+	column Differential
+		dataType: double
+		lineageTag: 2889b41d-d352-41e9-b41b-97b39af9b1fb
+		summarizeBy: none
+		sourceColumn: Differential
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RoundKey
+		dataType: string
+		lineageTag: 97f523f8-dad1-4778-8c55-b29dd78d7628
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Handicap Index Snapshot' = ```
+			
+			VAR CurrentDate   = Handicap[Date]
+			VAR CurrentGolfer = Handicap[Golfer]
+			
+			-- All valid rounds up to this point for this golfer
+			VAR PriorRounds =
+			    FILTER (
+			        ALL ( Handicap ),
+			        Handicap[Golfer] = CurrentGolfer &&
+			        Handicap[Date] <= CurrentDate &&
+			        NOT ISBLANK ( Handicap[Differential] )
+			    )
+			
+			-- Take latest 20
+			VAR Latest20 =
+			    TOPN (
+			        20,
+			        PriorRounds,
+			        Handicap[Date],
+			        DESC
+			    )
+			
+			-- Rank lowest differentials
+			VAR Ranked =
+			    ADDCOLUMNS (
+			        Latest20,
+			        "Rank",
+			        RANKX (
+			            Latest20,
+			            Handicap[Differential],
+			            ,
+			            ASC
+			        )
+			    )
+			
+			-- Count how many rounds
+			VAR RoundCount = COUNTROWS(Ranked)
+			
+			-- How many scores to use
+			VAR ScoresToUse =
+			    SWITCH (
+			        TRUE(),
+			        RoundCount IN {1, 2}, 1,
+			        RoundCount = 3, 1,
+			        RoundCount = 4, 1,
+			        RoundCount = 5, 1,
+			        RoundCount = 6, 2,
+			        RoundCount IN {7, 8}, 2,
+			        RoundCount IN {9, 10}, 3,
+			        RoundCount IN {11, 12, 13, 14}, 4,
+			        RoundCount IN {15, 16}, 5,
+			        RoundCount IN {17, 18}, 6,
+			        RoundCount = 19, 7,
+			        RoundCount >= 20, 8,
+			        0
+			    )
+			
+			-- Adjustment for 3+ rounds
+			VAR Adjustment =
+			    SWITCH (
+			        TRUE(),
+			        RoundCount = 3, -2,
+			        RoundCount = 4, -1,
+			        RoundCount = 5, 0,
+			        RoundCount = 6, -1,
+			        TRUE(), 0
+			    )
+			
+			-- Filter top N rounds
+			VAR TopDiffs =
+			    FILTER (
+			        Ranked,
+			        [Rank] <= ScoresToUse
+			    )
+			
+			-- Final calculation
+			VAR Result =
+			    IF (
+			        RoundCount >= 1,
+			        TRUNC (
+			            AVERAGEX ( TopDiffs, Handicap[Differential] ) +
+			            IF (RoundCount >= 3, Adjustment, 0),
+			            1
+			        )
+			    )
+			
+			RETURN Result
+			
+			```
+		lineageTag: 6ab62bb7-7a78-49f3-90cb-33f9c9e9da33
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Golfer
+		dataType: string
+		lineageTag: cd43578a-31fd-4ac7-9fbf-19d1b6fcf6bb
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date – Short Course (Column)' = ```
+			
+			VAR sc = RELATED ( 'Course Table'[Short Course] )
+			RETURN
+			FORMAT ( Handicap[Date], "mm/dd/yyyy" ) & ": " & sc
+			
+			```
+		lineageTag: 1d96fd13-1793-46ba-af34-e66ba0623bba
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Handicap = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    Handicap_Sheet = Source{[Item="Handicap",Kind="Sheet"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Handicap_Sheet,{{"Column1", type any}, {"Column2", type text}, {"Column3", type text}, {"Column4", type any}, {"Column5", type any}, {"Column6", type any}, {"Column7", type any}, {"Column8", type any}}),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Changed Type", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(#"Removed Blank Rows",3),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Removed Bottom Rows", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type any}, {"Course", type text}, {"Tees", type text}, {"Score", type any}, {"Rating", type any}, {"Slope", type any}, {"Differential", type number}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Changed Type1",{{"Slope", Int64.Type}, {"Score", Int64.Type}, {"Rating", type number}, {"Date", type date}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type2","RoundKey",each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course]),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Added Custom",{{"RoundKey", type text}})
+				in
+				    #"Changed Type3"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

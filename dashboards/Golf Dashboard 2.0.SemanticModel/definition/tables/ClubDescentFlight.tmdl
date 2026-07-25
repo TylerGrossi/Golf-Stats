@@ -1,0 +1,158 @@
+table ClubDescentFlight
+	isHidden
+	lineageTag: bec8c392-b5f2-4ee7-9bcb-fafaf7c54143
+
+	column 'Club Type'
+		isHidden
+		lineageTag: 61954e74-ace3-4682-9bf2-3bcf9f7ff7ef
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Range Stats[Club Type]
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgApex
+		isHidden
+		lineageTag: b8fda448-1588-47ea-a9f6-af3d06e85d23
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [AvgApex]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AvgDescent
+		isHidden
+		lineageTag: fbe21ba5-0cb6-4034-b5ee-ed46dc92e7a1
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [AvgDescent]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Value
+		isHidden
+		lineageTag: 66e3cc66-a454-45ae-aba9-804d787d1db5
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column X
+		isHidden
+		lineageTag: 7f7eccfa-f2ab-4c0b-92a1-2f2248bcd1fa
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [X]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Y
+		isHidden
+		lineageTag: 207b6ded-c86b-45e1-86cc-32961929feee
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Y]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Club
+		isHidden
+		lineageTag: e194da4b-7ed3-4678-a96a-16b2540ea16f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Club]
+
+		annotation SummarizationSetBy = Automatic
+
+	column ApexHeight
+		isHidden
+		lineageTag: bf4f1083-beeb-4b3d-a5b8-076f3b656dd9
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [ApexHeight]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Descent
+		isHidden
+		lineageTag: 24a5d854-4280-4856-af62-45b03c69b7a2
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Descent]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PointOrder
+		isHidden
+		formatString: 0
+		lineageTag: c741f0ea-bb8f-47bb-8a09-7ae2dc709dcc
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [PointOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Category' =
+			
+			SWITCH (
+			    TRUE(),
+			    [Club Type] = "d", "Driver",
+			    [Club Type] IN {"3w", "3h"}, "Fairway Woods",
+			    [Club Type] IN {"4i", "5i", "6i"}, "Long Irons",
+			    [Club Type] IN {"7i", "8i", "9i"}, "Short Irons",
+			    [Club Type] IN {"pw", "gw", "sw", "lw"}, "Wedges",
+			    "Other"
+			)
+		lineageTag: 5357ee67-42ec-4806-9a17-8c078361256b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ClubDescentFlight = calculated
+		mode: import
+		source = ```
+				
+				VAR Points = GENERATESERIES(0, 1, 0.05)  -- 21 points from Apex to Carry
+				RETURN
+				    GENERATE (
+				        SUMMARIZE (
+				            'Range Stats',
+				            'Range Stats'[Club Type],
+				            "AvgApex", AVERAGE('Range Stats'[Apex]),
+				            "AvgDescent", AVERAGE('Range Stats'[Descent Angle])
+				        ),
+				        VAR Apex = [AvgApex]
+				        VAR DescentRad = RADIANS([AvgDescent])
+				        VAR ApexX = 0  -- we'll start X at 0 for simplicity
+				        VAR Carry = Apex / TAN(DescentRad)
+				        RETURN
+				            ADDCOLUMNS (
+				                Points,
+				                "X", [Value] * Carry,  -- move from 0 to Carry
+				                "Y", -4 * Apex / (Carry * Carry) * POWER(([Value] * Carry - Carry / 2), 2) + Apex,
+				                "Club", [Club Type],
+				                "ApexHeight", Apex,
+				                "Descent", [AvgDescent],
+				                "PointOrder", RANKX(Points, [Value])
+				            )
+				    )
+				
+				```
+
+	annotation PBI_Id = d8bf112e4c764a99acc9c20c30fbd8db
+

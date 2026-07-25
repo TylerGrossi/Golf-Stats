@@ -1,0 +1,104 @@
+table Area
+	lineageTag: e82082b5-8f1a-4579-9b46-5f2bf5f117a2
+
+	measure 'Score On' =
+			VAR a = SELECTEDVALUE('Area'[Area])
+			RETURN
+				SWITCH(
+					a,
+					"Driving", CALCULATE(AVERAGE('Golf Log'[Score]), KEEPFILTERS('clustered_rounds'[Driving] = "On")),
+					"Irons", CALCULATE(AVERAGE('Golf Log'[Score]), KEEPFILTERS('clustered_rounds'[Irons] = "On")),
+					"Wedges", CALCULATE(AVERAGE('Golf Log'[Score]), KEEPFILTERS('clustered_rounds'[Wedges] = "On")),
+					"Putting", CALCULATE(AVERAGE('Golf Log'[Score]), KEEPFILTERS('clustered_rounds'[Putting] = "On"))
+				)
+		formatString: 0.0
+		lineageTag: 89481cde-37eb-49fe-a121-e83009f5a1dc
+
+	measure 'Score Off' =
+			VAR a = SELECTEDVALUE('Area'[Area])
+			RETURN
+				SWITCH(
+					a,
+					"Driving", CALCULATE(AVERAGE('Golf Log'[Score]), KEEPFILTERS('clustered_rounds'[Driving] = "Off")),
+					"Irons", CALCULATE(AVERAGE('Golf Log'[Score]), KEEPFILTERS('clustered_rounds'[Irons] = "Off")),
+					"Wedges", CALCULATE(AVERAGE('Golf Log'[Score]), KEEPFILTERS('clustered_rounds'[Wedges] = "Off")),
+					"Putting", CALCULATE(AVERAGE('Golf Log'[Score]), KEEPFILTERS('clustered_rounds'[Putting] = "Off"))
+				)
+		formatString: 0.0
+		lineageTag: b25ac76d-7eec-433a-aab6-25ce281cf663
+
+	measure 'z_Driving Roll3' =
+			VAR d = MAX('clustered_rounds'[Date])
+			RETURN
+				AVERAGEX(
+					TOPN(3, FILTER(ALLSELECTED('clustered_rounds'), 'clustered_rounds'[Date] <= d), 'clustered_rounds'[Date], DESC),
+					'clustered_rounds'[z_Driving]
+				)
+		formatString: 0.00
+		lineageTag: a1a1a1a1-0000-4000-8000-000000000001
+
+	measure 'z_Irons Roll3' =
+			VAR d = MAX('clustered_rounds'[Date])
+			RETURN
+				AVERAGEX(
+					TOPN(3, FILTER(ALLSELECTED('clustered_rounds'), 'clustered_rounds'[Date] <= d), 'clustered_rounds'[Date], DESC),
+					'clustered_rounds'[z_Irons]
+				)
+		formatString: 0.00
+		lineageTag: a1a1a1a1-0000-4000-8000-000000000002
+
+	measure 'z_Wedges Roll3' =
+			VAR d = MAX('clustered_rounds'[Date])
+			RETURN
+				AVERAGEX(
+					TOPN(3, FILTER(ALLSELECTED('clustered_rounds'), 'clustered_rounds'[Date] <= d), 'clustered_rounds'[Date], DESC),
+					'clustered_rounds'[z_Wedges]
+				)
+		formatString: 0.00
+		lineageTag: a1a1a1a1-0000-4000-8000-000000000003
+
+	measure 'z_Putting Roll3' =
+			VAR d = MAX('clustered_rounds'[Date])
+			RETURN
+				AVERAGEX(
+					TOPN(3, FILTER(ALLSELECTED('clustered_rounds'), 'clustered_rounds'[Date] <= d), 'clustered_rounds'[Date], DESC),
+					'clustered_rounds'[z_Putting]
+				)
+		formatString: 0.00
+		lineageTag: a1a1a1a1-0000-4000-8000-000000000004
+
+	column Area
+		lineageTag: 981b9fcc-440a-466a-8892-661d6d103ad8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Area]
+		sortByColumn: Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order
+		dataType: int64
+		formatString: 0
+		lineageTag: b7c8d9e0-1111-4000-8000-000000000010
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Area = calculated
+		mode: import
+		source =
+				DATATABLE(
+					"Area", STRING,
+					"Order", INTEGER,
+					{
+						{"Driving", 1},
+						{"Irons", 2},
+						{"Wedges", 3},
+						{"Putting", 4}
+					}
+				)
+
+	annotation PBI_Id = Area
+

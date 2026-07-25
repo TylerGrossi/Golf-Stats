@@ -1,0 +1,228 @@
+table 'GIR Log by Hole'
+	lineageTag: be0af792-3a24-4a57-8e24-d21c9efd4563
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 73d3278f-c06b-4a50-8701-cd5948ee12bd
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 248625fc-29dd-4993-acf2-571b90813ead
+			defaultHierarchy: LocalDateTable_ccce49ed-62e5-44da-8529-9b09cee41aa5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Course
+		dataType: string
+		lineageTag: 5346a5f4-b35f-4f2e-b1a0-004818419ab4
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column GIR
+		dataType: int64
+		formatString: 0
+		lineageTag: 785ef13d-72df-456f-9ee9-238bf0d8bd0a
+		summarizeBy: none
+		sourceColumn: GIR
+
+		annotation SummarizationSetBy = User
+
+	column 1
+		dataType: string
+		lineageTag: d9133a21-7893-4d68-84fb-a17fb13fb1cb
+		summarizeBy: none
+		sourceColumn: 1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 2
+		dataType: string
+		lineageTag: 243b6509-9d4a-41e1-81fc-0266c5338ad7
+		summarizeBy: none
+		sourceColumn: 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 3
+		dataType: string
+		lineageTag: 8d4c3822-8d34-4ac9-b9d7-f60fd909af6d
+		summarizeBy: none
+		sourceColumn: 3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 4
+		dataType: string
+		lineageTag: 11d7bf06-5378-4986-8465-1ae3d3f74a47
+		summarizeBy: none
+		sourceColumn: 4
+
+		annotation SummarizationSetBy = Automatic
+
+	column 5
+		dataType: string
+		lineageTag: 25b3c417-2eed-413b-8c1d-cc1e879b95d7
+		summarizeBy: none
+		sourceColumn: 5
+
+		annotation SummarizationSetBy = Automatic
+
+	column 6
+		dataType: string
+		lineageTag: af38bcb5-dfc9-4903-8bce-b881aeb4c2c8
+		summarizeBy: none
+		sourceColumn: 6
+
+		annotation SummarizationSetBy = Automatic
+
+	column 7
+		dataType: string
+		lineageTag: 21cf2967-3a53-4636-807c-53b573ae39b8
+		summarizeBy: none
+		sourceColumn: 7
+
+		annotation SummarizationSetBy = Automatic
+
+	column 8
+		dataType: string
+		lineageTag: 718e00e2-42dd-4499-99ef-bf43c7ed4ca7
+		summarizeBy: none
+		sourceColumn: 8
+
+		annotation SummarizationSetBy = Automatic
+
+	column 9
+		dataType: string
+		lineageTag: 6654c50b-e759-4241-b953-3f9c5dedce0d
+		summarizeBy: none
+		sourceColumn: 9
+
+		annotation SummarizationSetBy = Automatic
+
+	column 10
+		dataType: string
+		lineageTag: aaf8fab4-090c-4204-94a5-f85ef1cca68c
+		summarizeBy: none
+		sourceColumn: 10
+
+		annotation SummarizationSetBy = Automatic
+
+	column 11
+		dataType: string
+		lineageTag: 960c6dfc-4b6d-447e-b8a6-76b0dfe1a68a
+		summarizeBy: none
+		sourceColumn: 11
+
+		annotation SummarizationSetBy = Automatic
+
+	column 12
+		dataType: string
+		lineageTag: 21c39bc4-0160-40fa-8da6-85c78e7d04b7
+		summarizeBy: none
+		sourceColumn: 12
+
+		annotation SummarizationSetBy = Automatic
+
+	column 13
+		dataType: string
+		lineageTag: 3a8ba033-cb4c-4e33-acfd-7514409ef537
+		summarizeBy: none
+		sourceColumn: 13
+
+		annotation SummarizationSetBy = Automatic
+
+	column 14
+		dataType: string
+		lineageTag: b3ef8b6c-1529-4c2d-9372-175109e8f089
+		summarizeBy: none
+		sourceColumn: 14
+
+		annotation SummarizationSetBy = Automatic
+
+	column 15
+		dataType: string
+		lineageTag: 23ff2f11-540c-40d5-b3fb-392b1f0cb095
+		summarizeBy: none
+		sourceColumn: 15
+
+		annotation SummarizationSetBy = Automatic
+
+	column 16
+		dataType: string
+		lineageTag: 9b24dcab-d7d4-419b-af57-a5130bd02d26
+		summarizeBy: none
+		sourceColumn: 16
+
+		annotation SummarizationSetBy = Automatic
+
+	column 17
+		dataType: string
+		lineageTag: 2cfffbdc-8378-4e56-b113-2b4050fed79d
+		summarizeBy: none
+		sourceColumn: 17
+
+		annotation SummarizationSetBy = Automatic
+
+	column 18
+		dataType: string
+		lineageTag: 0e604fac-43d0-46db-b7f6-f7a49a992f41
+		summarizeBy: none
+		sourceColumn: 18
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundKey
+		dataType: string
+		lineageTag: c34dfbc5-91f0-4d67-83d8-6d1b34492608
+		summarizeBy: none
+		sourceColumn: RoundKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Golfer
+		dataType: string
+		lineageTag: 29c8a1ff-db90-49e5-b398-89bdbbc27d6d
+		summarizeBy: none
+		sourceColumn: Golfer
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'GIR %'
+		dataType: string
+		lineageTag: 09743f2e-0454-4977-b80d-856640d3bfa1
+		summarizeBy: none
+		sourceColumn: GIR %
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'GIR Log by Hole' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"GIR Log_Sheet" = Source{[Item="GIR Log",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"GIR Log_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type any}, {"Course", type text}, {"GIR", type any}, {"Hole 1", type any}, {"Hole 2", type any}, {"Hole 3", type any}, {"Hole 4", type any}, {"Hole 5", type any}, {"Hole 6", type any}, {"Hole 7", type any}, {"Hole 8", type any}, {"Hole 9", type any}, {"Hole 10", type any}, {"Hole 11", type any}, {"Hole 12", type any}, {"Hole 13", type any}, {"Hole 14", type any}, {"Hole 15", type any}, {"Hole 16", type any}, {"Hole 17", type any}, {"Hole 18", type any}}),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(#"Changed Type",3),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Removed Bottom Rows", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Added Custom2" = Table.AddColumn(#"Removed Blank Rows","RoundKey",each [Golfer] & " - " & Text.From(Date.From([Date])) & " - " & [Course]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom2",{{"Hole 1", type text}, {"Hole 2", type text}, {"Hole 3", type text}, {"Hole 4", type text}, {"Hole 5", type text}, {"Hole 6", type text}, {"Hole 7", type text}, {"Hole 8", type text}, {"Hole 9", type text}, {"Hole 10", type text}, {"Hole 11", type text}, {"Hole 12", type text}, {"Hole 13", type text}, {"Hole 14", type text}, {"Hole 15", type text}, {"Hole 16", type text}, {"Hole 17", type text}, {"Hole 18", type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type1","1","✓",Replacer.ReplaceText,{"Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5", "Hole 6", "Hole 7", "Hole 8", "Hole 9", "Hole 10", "Hole 11", "Hole 12", "Hole 13", "Hole 14", "Hole 15", "Hole 16", "Hole 17", "Hole 18"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","0","✗",Replacer.ReplaceText,{"Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5", "Hole 6", "Hole 7", "Hole 8", "Hole 9", "Hole 10", "Hole 11", "Hole 12", "Hole 13", "Hole 14", "Hole 15", "Hole 16", "Hole 17", "Hole 18"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Replaced Value1",{{"Hole 4", "4"}, {"Hole 3", "3"}, {"Hole 5", "5"}, {"Hole 6", "6"}, {"Hole 7", "7"}, {"Hole 8", "8"}, {"Hole 9", "9"}, {"Hole 10", "10"}, {"Hole 11", "11"}, {"Hole 12", "12"}, {"Hole 13", "13"}, {"Hole 14", "14"}, {"Hole 15", "15"}, {"Hole 16", "16"}, {"Hole 17", "17"}, {"Hole 18", "18"}, {"Hole 1", "1"}, {"Hole 2", "2"}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns",{{"Date", type date}, {"GIR", Int64.Type}, {"RoundKey", type text}}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Changed Type2","NC","–",Replacer.ReplaceText,{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"})
+				in
+				    #"Replaced Value2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

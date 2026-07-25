@@ -1,0 +1,31 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg04Hole",
+  "displayName": "Hole Dashboard",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "551ab564ac0771b2cc17",
+      "target": "704acd9b354556a664b8",
+      "type": "DataFilter"
+    },
+    {
+      "source": "551ab564ac0771b2cc17",
+      "target": "5fa93a957adc77a07050",
+      "type": "NoFilter"
+    },
+    {
+      "source": "704acd9b354556a664b8",
+      "target": "5fa93a957adc77a07050",
+      "type": "NoFilter"
+    },
+    {
+      "source": "453fdfc434e58236a3d5",
+      "target": "5fa93a957adc77a07050",
+      "type": "NoFilter"
+    }
+  ]
+}

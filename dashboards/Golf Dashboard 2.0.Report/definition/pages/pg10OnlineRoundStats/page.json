@@ -1,0 +1,41 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg10OnlineRoundStats",
+  "displayName": "Online Round Stats",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "4f41c29eb689eae4c41a",
+      "target": "8263a52455c16821c1a5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "4f41c29eb689eae4c41a",
+      "target": "fd0822bac137f87b7c62",
+      "type": "NoFilter"
+    },
+    {
+      "source": "4f41c29eb689eae4c41a",
+      "target": "36e9b24bba448b66a9ae",
+      "type": "NoFilter"
+    },
+    {
+      "source": "4f41c29eb689eae4c41a",
+      "target": "c5fa4de8885b4f953851",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f9c6fdcdc3ddf0d5d5a4",
+      "target": "c5fa4de8885b4f953851",
+      "type": "NoFilter"
+    },
+    {
+      "source": "d4decf7d5fad8fd7dbd5",
+      "target": "c5fa4de8885b4f953851",
+      "type": "NoFilter"
+    }
+  ]
+}

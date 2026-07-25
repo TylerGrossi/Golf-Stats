@@ -1,0 +1,65 @@
+table 'Hole Table'
+	lineageTag: 309f2bfd-8ebb-4fd9-98b8-d16a23a07433
+
+	column CourseHoleKey
+		lineageTag: 03a0436b-093e-48da-811e-a3ce221cd7e0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Golf Log[CourseHoleKey]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		formatString: Short Date
+		lineageTag: d0813ea8-9f4f-4946-a380-a61b982be5a3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: 49602f64-8d06-4cad-a77e-b9a94430516f
+			defaultHierarchy: LocalDateTable_5ac7f6a0-bbd5-45a3-ac83-cad330d8ca3f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Short Course'
+		lineageTag: 522a5e5f-eba0-4c3b-b558-1a27c391297a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Short Course]
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoundKey
+		lineageTag: 93967f52-6c41-4adc-b94b-9bb0f6de1477
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [RoundKey]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hole
+		formatString: 0
+		lineageTag: 95046d47-ee5f-4110-8c89-81668570399e
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Hole]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Hole Table' = calculated
+		mode: import
+		source =
+				
+				SUMMARIZE(
+				    'Golf Log',
+				    'Golf Log'[CourseHoleKey],
+				    "Date", MIN('Golf Log'[Date]),
+				    "Short Course", MIN('Golf Log'[Short Course]),
+				    "Hole", MIN('Golf Log'[Hole Number]),
+				    "RoundKey", MIN('Golf Log'[RoundKey])
+				)
+
+	annotation PBI_Id = 69746d1e2590488c8270b13f3ac63d4f
+

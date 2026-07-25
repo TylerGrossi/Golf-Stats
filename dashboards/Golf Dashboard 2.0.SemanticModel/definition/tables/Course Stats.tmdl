@@ -1,0 +1,152 @@
+table 'Course Stats'
+	lineageTag: 1208923c-3d5e-47e6-9947-86104472cf86
+
+	measure 'Hole Score vs Par' =
+			
+			VAR AvgScore = AVERAGE('Golf Log'[Hole Score])
+			VAR AvgPar = ('Course Stats'[Hole Par (Fixed)])
+			RETURN
+			AvgScore - AvgPar
+		lineageTag: e4e46472-9113-4d49-b78c-ff2c661c0ca6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Hole Par (Fixed)' =
+			
+			VAR FilteredPar =
+			    CALCULATE(
+			        MIN('Course Stats'[Hole Par]),
+			        FILTER(
+			            'Course Stats',
+			            'Course Stats'[Course] = SELECTEDVALUE('Golf Log'[Course]) &&
+			            'Course Stats'[Hole] = SELECTEDVALUE('Golf Log'[Hole])
+			        )
+			    )
+			RETURN
+			IF(
+			    ISBLANK(FilteredPar),
+			    AVERAGE('Course Stats'[Hole Par]),
+			    FilteredPar
+			)
+		formatString: 0
+		lineageTag: 276e1bab-d3e8-4746-951b-d596816a7248
+
+	measure 'Over Par on each Hole' = ```
+			'Course Stats'[Hole Par] - 
+			```
+		lineageTag: 3fff9a17-2ca3-4cbe-a8c2-38195a20a29a
+
+	column Course
+		dataType: string
+		lineageTag: b515dcbe-7068-4a98-b03e-1b2be022bb65
+		summarizeBy: none
+		sourceColumn: Course
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tees
+		dataType: string
+		lineageTag: b0106294-f316-4f66-a266-655d55be7cf5
+		summarizeBy: none
+		sourceColumn: Tees
+
+		annotation SummarizationSetBy = Automatic
+
+	column Yardage
+		dataType: int64
+		formatString: 0
+		lineageTag: db34a2a9-db7f-404d-91cf-c03f4b7e9af6
+		summarizeBy: sum
+		sourceColumn: Yardage
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rating
+		dataType: double
+		lineageTag: 5596aa43-bfd2-4fd0-a3d9-618f88e32809
+		summarizeBy: sum
+		sourceColumn: Rating
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Slope
+		dataType: double
+		lineageTag: c5bd9d1e-53fc-4b77-b72b-80130185d0fc
+		summarizeBy: sum
+		sourceColumn: Slope
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Par
+		dataType: int64
+		formatString: 0
+		lineageTag: 3b103a48-494d-4fdf-86ba-852afe8d7125
+		summarizeBy: sum
+		sourceColumn: Par
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hole
+		dataType: string
+		lineageTag: 7f0d17a1-ad4d-4997-bc94-e4929dda73c1
+		summarizeBy: none
+		sourceColumn: Hole
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hole Par'
+		dataType: int64
+		formatString: 0
+		lineageTag: d4ab1350-4a16-465c-8ec4-ef5c33b9a194
+		summarizeBy: sum
+		sourceColumn: Hole Par
+
+		annotation SummarizationSetBy = Automatic
+
+	column CourseHoleKey
+		dataType: string
+		lineageTag: cc2eb3a3-7577-4246-86fc-c193ce2da281
+		summarizeBy: none
+		sourceColumn: CourseHoleKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hole Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 1a530dc4-76fc-4bba-8169-b9fe4a8c522f
+		summarizeBy: sum
+		sourceColumn: Hole Number
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Course Stats' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Owner\Desktop\Tyler\OneDrive\Projects\Golf Stats\data\raw\Golf Stats.xlsx"), null, true),
+				    #"Course Stats_Sheet" = Source{[Item="Course Stats",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Course Stats_Sheet", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Course", type text}, {"Tees", type text}, {"Yardage", Int64.Type}, {"Rating", type number}, {"Slope", type number}, {"Par", Int64.Type}, {"Hole 1", Int64.Type}, {"Hole 2", Int64.Type}, {"Hole 3", Int64.Type}, {"Hole 4", Int64.Type}, {"Hole 5", Int64.Type}, {"Hole 6", Int64.Type}, {"Hole 7", Int64.Type}, {"Hole 8", Int64.Type}, {"Hole 9", Int64.Type}, {"Hole 10", Int64.Type}, {"Hole 11", Int64.Type}, {"Hole 12", Int64.Type}, {"Hole 13", Int64.Type}, {"Hole 14", Int64.Type}, {"Hole 15", Int64.Type}, {"Hole 16", Int64.Type}, {"Hole 17", Int64.Type}, {"Hole 18", Int64.Type}, {"Column25", type any}}),
+				    #"Unpivoted Only Selected Columns" = Table.Unpivot(#"Changed Type", {"Hole 1", "Hole 2", "Hole 3", "Hole 4", "Hole 5", "Hole 6", "Hole 7", "Hole 8", "Hole 9", "Hole 10", "Hole 11", "Hole 12", "Hole 13", "Hole 14", "Hole 15", "Hole 16", "Hole 17", "Hole 18"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Only Selected Columns",{{"Attribute", "Hole"}, {"Value", "Hole Par"}}),
+				    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "CourseHoleKey", each [Course] & " " & [Hole]),
+				    #"Removed Columns" = Table.RemoveColumns(#"Added Custom",{"Column25"}),
+				    #"Added Custom1" = Table.AddColumn(#"Removed Columns", "Custom", each Number.FromText(Text.Replace([Hole], "Hole ", ""))),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Added Custom1",{{"Custom", "Hole Number"}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Renamed Columns1", {"CourseHoleKey"}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Removed Duplicates", "Course", "Course - Copy"),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Duplicated Column",{"Course", "Course - Copy", "Tees", "Yardage", "Rating", "Slope", "Par", "Hole", "Hole Par", "CourseHoleKey", "Hole Number"}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Reordered Columns",{"Course - Copy"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Columns1",{{"CourseHoleKey", type text}, {"Hole Number", Int64.Type}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

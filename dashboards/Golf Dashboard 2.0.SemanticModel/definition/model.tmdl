@@ -1,0 +1,65 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Golf Log","Course Stats","Golf Scores","Handicap","Golf Log by Hole","Putt Log","Fairway Log","GIR Log","Putt Log by Hole","Fairway Log by Hole","GIR Log by Hole","Range Stats","Rapsodo Course Stats","Recommendations","clutch_score_analysis","strokes_gained_summary","clustered_rounds","club_ranges","PerformanceMetrics","Hole Log"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DateTableTemplate_5193dd16-920e-432f-83ac-8ecc0badb809
+ref table 'Golf Log'
+ref table 'Golf Scores'
+ref table 'Course Stats'
+ref table Handicap
+ref table LocalDateTable_f25e2448-9936-43d0-9939-97a6485570f6
+ref table 'Golf Log by Hole'
+ref table LocalDateTable_a091dc8d-1eb8-4bd3-b0b4-1cce0a5f94f6
+ref table 'Putt Log'
+ref table 'Fairway Log'
+ref table 'GIR Log'
+ref table 'Putt Log by Hole'
+ref table 'Fairway Log by Hole'
+ref table 'GIR Log by Hole'
+ref table 'Date Table'
+ref table LocalDateTable_1324f03d-1919-43c4-b1e2-dd61d4849dd6
+ref table 'Course Table'
+ref table 'Range Stats'
+ref table 'Rapsodo Course Stats'
+ref table LaunchDirectionGraph
+ref table LaunchAngleGraph
+ref table ClubLookup
+ref table ApexGraph
+ref table ClubDescentFlight
+ref table LocalDateTable_f96572a3-679a-4643-9e56-ffc714fa7046
+ref table Recommendations
+ref table clutch_score_analysis
+ref table strokes_gained_summary
+ref table clustered_rounds
+ref table club_ranges
+ref table PerformanceMetrics
+ref table 'Round Table'
+ref table LocalDateTable_f7926181-0efd-463e-9fc8-ebb868617894
+ref table LocalDateTable_dfdc2824-cac3-4e81-b350-745efe4e6818
+ref table LocalDateTable_f53b30ec-812d-4ecc-8ace-81abae279ca8
+ref table LocalDateTable_0ea3623d-79fe-44dc-be38-455e2fa266d4
+ref table LocalDateTable_7875566d-8384-456a-963a-0443fa342214
+ref table LocalDateTable_23b67ad6-a713-4f4e-ab04-2442997e7aea
+ref table LocalDateTable_ecacfbdd-6691-4727-a0dc-5be81039820d
+ref table LocalDateTable_5abcb086-89f7-431f-a7d7-b55152575b61
+ref table LocalDateTable_eff1f61f-27ef-43c8-bd57-82bc851ea3c1
+ref table LocalDateTable_a5680f83-0786-4d6c-9a8b-85e073fcc68b
+ref table LocalDateTable_ccce49ed-62e5-44da-8529-9b09cee41aa5
+ref table 'Hole Table'
+ref table LocalDateTable_5ac7f6a0-bbd5-45a3-ac83-cad330d8ca3f
+ref table 'Hole Log'
+ref table LocalDateTable_6690f925-4aac-4115-992a-c636a0e99174
+ref table Area
+
+ref cultureInfo en-US
+

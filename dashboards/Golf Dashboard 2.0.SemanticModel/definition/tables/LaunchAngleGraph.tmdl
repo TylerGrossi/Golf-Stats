@@ -1,0 +1,142 @@
+table LaunchAngleGraph
+	isHidden
+	lineageTag: f18b5a75-1301-405a-b97f-62cffee4be2a
+
+	column 'Club Type'
+		isHidden
+		lineageTag: b9685a4a-e94b-4f03-b06b-4da45189a3ee
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Range Stats[Club Type]
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgLaunchAngle
+		isHidden
+		lineageTag: a8b7f54c-a87f-4ef8-8d11-d6f7aa7119c7
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [AvgLaunchAngle]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PointOrder
+		isHidden
+		formatString: 0
+		lineageTag: 3819a47d-8dad-4bda-9e74-e1483f0db114
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [PointOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	column X
+		isHidden
+		lineageTag: 32bb2800-7f7a-41b8-8573-bd311b8e2d2f
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [X]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Y
+		isHidden
+		lineageTag: c05cfa68-0779-4564-a5d6-6ed9337d16f6
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Y]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Club
+		isHidden
+		lineageTag: abe074bf-f9bc-4b99-a096-e0c4928834ea
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Club]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LaunchAngle
+		isHidden
+		lineageTag: 5dbd200b-c9b0-45df-ab20-4f206fab7fe8
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [LaunchAngle]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LaunchAngleTooltip = ```
+			
+			IF (
+			    [PointOrder] = 2,
+			    [Club] & ": " & ROUND([LaunchAngle], 1) & "°",
+			    BLANK()
+			)
+			
+			```
+		isHidden
+		lineageTag: c2f2ae6a-23d7-4ae8-a15c-a1d95d637191
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Category' = ```
+			
+			SWITCH (
+			    TRUE(),
+			    [Club Type] = "d", "Driver",
+			    [Club Type] IN {"3w", "3h"}, "Fairway Woods",
+			    [Club Type] IN {"4i", "5i", "6i"}, "Long Irons",
+			    [Club Type] IN {"7i", "8i", "9i"}, "Short Irons",
+			    [Club Type] IN {"pw", "gw", "sw", "lw"}, "Wedges",
+			    "Other"
+			)
+			
+			```
+		isHidden
+		lineageTag: 29b1216f-864c-4f65-8b3c-9ac460393ac4
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LaunchAngleGraph = calculated
+		mode: import
+		source = ```
+				
+				GENERATE (
+				    SUMMARIZE (
+				        'Range Stats',
+				        'Range Stats'[Club Type],
+				        "AvgLaunchAngle", AVERAGE('Range Stats'[Launch Angle])
+				    ),
+				    UNION (
+				        ROW (
+				            "PointOrder", 1,
+				            "X", 0.0,
+				            "Y", 0.0,
+				            "Club", [Club Type],
+				            "LaunchAngle", [AvgLaunchAngle]
+				        ),
+				        ROW (
+				            "PointOrder", 2,
+				            "X", 1.0,
+				            "Y", [AvgLaunchAngle],
+				            "Club", [Club Type],
+				            "LaunchAngle", [AvgLaunchAngle]
+				        )
+				    )
+				)
+				
+				```
+
+	annotation PBI_Id = 722ecb97c3164d6ba000bc34506a54cc
+

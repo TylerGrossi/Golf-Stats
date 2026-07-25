@@ -1,0 +1,26 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "pg06Fairways",
+  "displayName": "Fairways Dashboard",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1550,
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "415519e493c4a147594f",
+      "target": "dcbcc6a7ef59eab50d75",
+      "type": "DataFilter"
+    },
+    {
+      "source": "415519e493c4a147594f",
+      "target": "806e9e14a1408ba35520",
+      "type": "NoFilter"
+    },
+    {
+      "source": "d0af2e656ab420a905b4",
+      "target": "806e9e14a1408ba35520",
+      "type": "NoFilter"
+    }
+  ]
+}

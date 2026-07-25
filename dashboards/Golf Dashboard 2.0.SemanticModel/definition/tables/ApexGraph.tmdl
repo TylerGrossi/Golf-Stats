@@ -1,0 +1,168 @@
+table ApexGraph
+	isHidden
+	lineageTag: aad27ef0-6bc3-41bf-8a91-d5caf03edb43
+
+	column 'Club Type'
+		isHidden
+		lineageTag: deed1c93-0776-41b8-9eee-030eb63ce49d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Range Stats[Club Type]
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgLaunchAngle
+		isHidden
+		lineageTag: 427fa215-89eb-4536-8c4c-821d4cd637a7
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [AvgLaunchAngle]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AvgApex
+		isHidden
+		lineageTag: a6bf5cd2-4fc3-48ee-959d-0186e3f08c6b
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [AvgApex]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PointOrder
+		isHidden
+		formatString: 0
+		lineageTag: ac1280d2-70e5-4307-a275-4e270167987c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [PointOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	column X
+		isHidden
+		lineageTag: 4e9fd747-51f2-4dcf-a2d1-dc8c7d820485
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [X]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Y
+		isHidden
+		lineageTag: 2344e0be-cdc8-4f0b-b6d7-96768609a952
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Y]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Club
+		isHidden
+		lineageTag: 32f61fe4-6910-4e4f-9a0a-d982e12fa082
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Club]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LaunchAngle
+		isHidden
+		lineageTag: 9fe685a1-1349-40dc-8c79-522c10961e78
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [LaunchAngle]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Apex
+		isHidden
+		lineageTag: e48a0adb-6370-4380-b413-230dc5d0bff0
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Apex]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TrajectoryLabel = ```
+			
+			IF (
+			    [PointOrder] = 2,
+			    [Club] & ": " & ROUND([LaunchAngle], 1) & "° / " & ROUND([Apex], 1) & " ft",
+			    BLANK()
+			)
+			
+			```
+		isHidden
+		lineageTag: 45ca2b3d-fd2b-4b93-a67c-9419c1d345cc
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Club Category' =
+			
+			SWITCH (
+			    TRUE(),
+			    [Club Type] = "d", "Driver",
+			    [Club Type] IN {"3w", "3h"}, "Fairway Woods",
+			    [Club Type] IN {"4i", "5i", "6i"}, "Long Irons",
+			    [Club Type] IN {"7i", "8i", "9i"}, "Short Irons",
+			    [Club Type] IN {"pw", "gw", "sw", "lw"}, "Wedges",
+			    "Other"
+			)
+		lineageTag: 7ceaf50b-75f2-4274-bae3-cd3d0dc0bd6e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ApexGraph = calculated
+		mode: import
+		source = ```
+				
+				GENERATE (
+				    SUMMARIZE (
+				        'Range Stats',
+				        'Range Stats'[Club Type],
+				        "AvgLaunchAngle", AVERAGE('Range Stats'[Launch Angle]),
+				        "AvgApex", AVERAGE('Range Stats'[Apex])
+				    ),
+				    VAR AngleRad = RADIANS([AvgLaunchAngle])
+				    VAR ApexY = [AvgApex]
+				    VAR ApexX = ApexY / TAN(AngleRad)
+				    RETURN
+				        UNION (
+				            ROW (
+				                "PointOrder", 1,
+				                "X", 0.0,
+				                "Y", 0.0,
+				                "Club", [Club Type],
+				                "LaunchAngle", [AvgLaunchAngle],
+				                "Apex", [AvgApex]
+				            ),
+				            ROW (
+				                "PointOrder", 2,
+				                "X", ApexX,
+				                "Y", ApexY,
+				                "Club", [Club Type],
+				                "LaunchAngle", [AvgLaunchAngle],
+				                "Apex", [AvgApex]
+				            )
+				        )
+				)
+				
+				```
+
+	annotation PBI_Id = e4dc504fc62f4a8bb8b5059c849a553d
+
