@@ -1,21 +1,58 @@
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer, Image
 import pandas as pd
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import os, tempfile
+import os, io, threading, functools, secrets
 from scipy import stats as scipy_stats
 
 import paths
 
 # ── Server config ─────────────────────────────────────────────────────────────
-_http_host = os.environ.get("FASTMCP_HOST") or (
+# Transport is chosen at run() time (SDK v2 moved host/port off the constructor).
+# stdio locally; Streamable HTTP when PORT is set, which is how container hosts
+# tell a process where to listen.
+_http_port = int(os.environ.get("PORT") or os.environ.get("MCP_PORT") or 8000)
+_http_host = os.environ.get("MCP_HOST") or (
     "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
 )
-_http_port = int(os.environ.get("PORT", os.environ.get("FASTMCP_PORT", "8000")))
-mcp = FastMCP("Golf Analytics", host=_http_host, port=_http_port)
+
+# Shared bearer token for HTTP mode. Claude sends this as a static request header on
+# every call. Unset means no auth, which is correct for stdio and a data leak on a
+# public URL — the HTTP entrypoint at the bottom of this file refuses to start
+# without it. Never put the token in the URL: the spec forbids credentials in query
+# strings, since URLs land in logs, proxies, and history.
+MCP_AUTH_TOKEN = os.environ.get("MCP_AUTH_TOKEN", "")
+
+mcp = MCPServer("Golf Analytics", version="2.0.0")
+
+
+class BearerAuthMiddleware:
+    """Reject HTTP requests that do not carry the shared bearer token.
+
+    Written as raw ASGI on purpose: Starlette's BaseHTTPMiddleware buffers the
+    response body, which would break the Streamable HTTP response stream.
+    """
+
+    def __init__(self, app, token):
+        self.app = app
+        self.expected = f"Bearer {token}"
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+        supplied = dict(scope.get("headers") or {}).get(b"authorization", b"").decode()
+        # compare_digest keeps a wrong token from being guessable a byte at a time.
+        if not secrets.compare_digest(supplied, self.expected):
+            await send({"type": "http.response.start", "status": 401, "headers": [
+                (b"content-type", b"application/json"),
+                (b"www-authenticate", b'Bearer realm="golf-mcp"'),
+            ]})
+            return await send({"type": "http.response.body",
+                               "body": b'{"error":"unauthorized"}'})
+        await self.app(scope, receive, send)
 
 # ── Load all data ─────────────────────────────────────────────────────────────
 # Raw sheets and the derived files below all originate from Golf Stats.xlsx, so
@@ -52,13 +89,32 @@ TRACKMAN_COLS = ["Carry Distance","Total Distance","Ball Speed","Launch Angle",
                  "Club Speed","Smash Factor","Apex","Side Carry","Descent Angle"]
 
 # ── Chart helpers ─────────────────────────────────────────────────────────────
-CHART_DIR = tempfile.mkdtemp()
+# Charts render straight to memory as inline PNGs. Returning a filesystem path only
+# ever worked when the client shared a disk with the server; over HTTP the client is
+# somewhere else entirely. CHART_DPI trades payload size against sharpness — charts
+# travel base64-encoded, which costs a third more than the raw bytes.
+CHART_DPI = int(os.environ.get("CHART_DPI", "110"))
 
-def save_chart(fig, name):
-    path = os.path.join(CHART_DIR, f"{name}.png")
-    fig.savefig(path, dpi=130, bbox_inches="tight", facecolor="#1a1a2e")
+# The SDK runs sync tool functions on worker threads, but pyplot's current-figure
+# state (plt.subplots, plt.xticks) is process-global, so two concurrent chart calls
+# would draw into each other's figures. Chart tools take this lock for their whole
+# body; every other tool is pure pandas and needs no serializing.
+_PYPLOT_LOCK = threading.RLock()
+
+def chart_tool(fn):
+    """Register a chart tool, serialized on the pyplot global-state lock."""
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        with _PYPLOT_LOCK:
+            return fn(*args, **kwargs)
+    return mcp.tool(structured_output=False)(wrapper)
+
+def render_chart(fig):
+    """Render `fig` to an inline PNG the client can display wherever it is running."""
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=CHART_DPI, bbox_inches="tight", facecolor="#1a1a2e")
     plt.close(fig)
-    return path
+    return Image(data=buf.getvalue(), format="png")
 
 def style_ax(ax, title="", xlabel="", ylabel=""):
     ax.set_facecolor("#16213e")
@@ -78,7 +134,7 @@ def style_ax(ax, title="", xlabel="", ylabel=""):
 # SCORING
 # ══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_scoring_trends(last_n_rounds: int = 10) -> str:
     """Get Tyler's recent scoring trends and averages."""
     recent = tyler.tail(last_n_rounds)
@@ -91,8 +147,8 @@ def get_scoring_trends(last_n_rounds: int = 10) -> str:
     )
 
 
-@mcp.tool()
-def chart_scoring_trend(last_n_rounds: int = 20) -> str:
+@chart_tool
+def chart_scoring_trend(last_n_rounds: int = 20) -> Image:
     """Generate a chart of Tyler's score trend over recent rounds."""
     df = tyler.tail(last_n_rounds).copy()
     fig, ax = plt.subplots(figsize=(10, 4), facecolor="#1a1a2e")
@@ -106,10 +162,10 @@ def chart_scoring_trend(last_n_rounds: int = 20) -> str:
     ax.legend(facecolor="#16213e", labelcolor="#cccccc")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
     plt.xticks(rotation=30)
-    return f"Chart saved to: {save_chart(fig, 'score_trend')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_scoring_distribution() -> str:
     """
     Breakdown of Tyler's score distribution: birdie rate, par rate, bogey rate,
@@ -133,7 +189,7 @@ def get_scoring_distribution() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_rolling_scoring_average(window: int = 5) -> str:
     """
     Rolling N-round scoring average to reveal momentum and true skill trend,
@@ -151,7 +207,7 @@ def get_rolling_scoring_average(window: int = 5) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_scoring_by_season() -> str:
     """
     Break down Tyler's scoring by season (spring/summer/fall/winter)
@@ -175,7 +231,7 @@ def get_scoring_by_season() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_handicap_trend() -> str:
     """Get Tyler's handicap differentials over time."""
     df = tyler_hcap[["Date","Course","Differential"]].copy()
@@ -184,8 +240,8 @@ def get_handicap_trend() -> str:
     return f"Estimated handicap index (avg of last 20): {avg20:.1f}\n\n" + df.to_string(index=False)
 
 
-@mcp.tool()
-def chart_handicap_trend() -> str:
+@chart_tool
+def chart_handicap_trend() -> Image:
     """Generate a chart of Tyler's handicap differential over time."""
     df = tyler_hcap.dropna(subset=["Differential"]).copy()
     rolling = df["Differential"].rolling(5, min_periods=1).mean()
@@ -196,10 +252,10 @@ def chart_handicap_trend() -> str:
     ax.legend(facecolor="#16213e", labelcolor="#cccccc")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
     plt.xticks(rotation=30)
-    return f"Chart saved to: {save_chart(fig, 'handicap_trend')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_front_vs_back_splits() -> str:
     """Compare Tyler's front 9 vs back 9 scoring."""
     df = tyler.dropna(subset=["Front 9","Back 9"])
@@ -215,7 +271,7 @@ def get_front_vs_back_splits() -> str:
 # RANGE — TRACKMAN SHOT DATA
 # ══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_range_stats_summary(club: str = "") -> str:
     """
     Get shot stats from Tyler's Trackman range sessions.
@@ -241,7 +297,7 @@ def get_range_stats_summary(club: str = "") -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_range_stats_percentiles(club: str) -> str:
     """
     Full percentile breakdown (P10, P25, P50, P75, P90) for all Trackman metrics
@@ -267,7 +323,7 @@ def get_range_stats_percentiles(club: str) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_smash_factor_deep(club: str) -> str:
     """
     Deep smash factor analysis for a single club: percentiles, Q3 (peak contact),
@@ -312,7 +368,7 @@ def get_smash_factor_deep(club: str) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_range_session_dates() -> str:
     """List all of Tyler's range session dates and which clubs were hit each session."""
     df = tyler_range.copy()
@@ -323,7 +379,7 @@ def get_range_session_dates() -> str:
     return f"Range sessions ({len(result)} total):\n\n" + result.to_string()
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def compare_range_sessions(club: str, stat: str = "Carry Distance") -> str:
     """
     Compare Tyler's stats for a club across different range session dates.
@@ -338,7 +394,7 @@ def compare_range_sessions(club: str, stat: str = "Carry Distance") -> str:
     return f"{club.upper()} — {stat} by session:\n\n" + session.to_string()
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_session_comparison(date1: str, date2: str = "") -> str:
     """
     Compare two specific range sessions head-to-head across all clubs and key metrics.
@@ -368,7 +424,7 @@ def get_session_comparison(date1: str, date2: str = "") -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_peak_session_stats(club: str = "", top_n: int = 3) -> str:
     """
     Find Tyler's top N range sessions ranked by Q3 smash factor and carry distance.
@@ -402,7 +458,7 @@ def get_peak_session_stats(club: str = "", top_n: int = 3) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_carry_percentiles_all_clubs() -> str:
     """
     Carry distance percentiles (P25, P50, P75, P90) for every club in the bag.
@@ -422,7 +478,7 @@ def get_carry_percentiles_all_clubs() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_dispersion_analysis(club: str = "") -> str:
     """
     Full dispersion (accuracy) analysis: side carry mean, std, left/right bias,
@@ -453,7 +509,7 @@ def get_dispersion_analysis(club: str = "") -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_stat_trend_regression(club: str, stat: str = "Smash Factor") -> str:
     """
     Linear regression of a Trackman stat over time for a specific club.
@@ -489,7 +545,7 @@ def get_stat_trend_regression(club: str, stat: str = "Smash Factor") -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def compare_clubs_head_to_head(club1: str, club2: str, stat: str = "Carry Distance") -> str:
     """
     Statistical t-test comparison between two clubs for a given stat.
@@ -516,7 +572,7 @@ def compare_clubs_head_to_head(club1: str, club2: str, stat: str = "Carry Distan
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_launch_efficiency_report() -> str:
     """
     For every club, actual vs ideal launch angle and smash factor gap to tour benchmarks.
@@ -544,7 +600,7 @@ def get_launch_efficiency_report() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_club_consistency(club: str) -> str:
     """Analyze how consistent Tyler is with a specific club."""
     df = tyler_range[tyler_range["Club Type"].str.lower() == club.lower()].copy()
@@ -578,7 +634,7 @@ def get_club_consistency(club: str) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_club_distance_gaps() -> str:
     """Identify distance gaps or overlaps in Tyler's bag using Trackman data."""
     rs = tyler_range.groupby("Club Type")["Carry Distance"].agg(["mean","std"]).reset_index()
@@ -602,7 +658,7 @@ def get_club_distance_gaps() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_club_for_distance(distance: int) -> str:
     """Recommend the best club for a given target carry distance in yards."""
     sel = club_sel.copy()
@@ -626,7 +682,7 @@ def get_club_for_distance(distance: int) -> str:
 # STROKES GAINED
 # ══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_strokes_gained_summary(last_n_rounds: int = 10) -> str:
     """Get Tyler's strokes gained breakdown vs scratch golfer."""
     recent = tyler_sg.tail(last_n_rounds)
@@ -644,7 +700,7 @@ def get_strokes_gained_summary(last_n_rounds: int = 10) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_strokes_gained_by_round() -> str:
     """Full round-by-round strokes gained table — every round, every SG category."""
     df = tyler_sg.copy()
@@ -655,7 +711,7 @@ def get_strokes_gained_by_round() -> str:
     return df2.to_string(index=False)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_strokes_gained_rolling(window: int = 5) -> str:
     """
     Rolling N-round strokes gained averages to reveal momentum in each SG category.
@@ -681,8 +737,8 @@ def get_strokes_gained_rolling(window: int = 5) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
-def chart_strokes_gained_trend() -> str:
+@chart_tool
+def chart_strokes_gained_trend() -> Image:
     """Chart how Tyler's strokes gained categories have changed over time."""
     df = tyler_sg.copy()
     sg_cols = {"SG_Putting":"Putting","SG_OTT":"Off Tee","SG_Approach":"Approach","SG_ARG":"ARG"}
@@ -696,11 +752,11 @@ def chart_strokes_gained_trend() -> str:
     ax.legend(facecolor="#16213e", labelcolor="#cccccc", ncol=2)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
     plt.xticks(rotation=30)
-    return f"Chart saved to: {save_chart(fig, 'sg_trend')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_strokes_gained_radar() -> str:
+@chart_tool
+def chart_strokes_gained_radar() -> Image:
     """Radar chart of Tyler's strokes gained profile across all categories."""
     recent = tyler_sg.tail(10)
     cats   = ["SG_OTT","SG_Approach","SG_ARG","SG_Putting"]
@@ -721,14 +777,14 @@ def chart_strokes_gained_radar() -> str:
     ax.set_yticklabels([])
     ax.set_title("SG Profile (last 10 rounds)", color="#ffffff", pad=20, fontsize=12)
     ax.grid(color="#2a2a4a")
-    return f"Chart saved to: {save_chart(fig, 'sg_radar')}"
+    return render_chart(fig)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PUTTING
 # ══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_putting_analysis() -> str:
     """
     Deep putting analysis: make% by distance band, avg putts per round,
@@ -754,7 +810,7 @@ def get_putting_analysis() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_putting_trends() -> str:
     """
     Putts per round over time with rolling average and trend direction.
@@ -777,7 +833,7 @@ def get_putting_trends() -> str:
 # COURSE & SITUATIONAL
 # ══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_course_breakdown(course_name: str = "") -> str:
     """Get Tyler's performance breakdown by course."""
     df = tyler.copy()
@@ -790,7 +846,7 @@ def get_course_breakdown(course_name: str = "") -> str:
     return summary.to_string()
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_course_improvement(course_name: str) -> str:
     """
     Round-by-round history at a specific course with delta vs course average.
@@ -818,7 +874,7 @@ def get_course_improvement(course_name: str) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_gir_and_fairway_analysis() -> str:
     """
     GIR and fairway hit rates by year, scoring when hitting vs missing GIR,
@@ -845,7 +901,7 @@ def get_gir_and_fairway_analysis() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_hole_recommendations(course_name: str, tees: str = "") -> str:
     """Get hole-by-hole strategy recommendations for a specific course."""
     df = recs_df[recs_df["Course"].str.contains(course_name, case=False)]
@@ -857,7 +913,7 @@ def get_hole_recommendations(course_name: str, tees: str = "") -> str:
     return df[cols].to_string(index=False)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_clutch_analysis() -> str:
     """Analyze how Tyler finishes rounds vs how he starts."""
     df = tyler_clutch.copy()
@@ -871,7 +927,7 @@ def get_clutch_analysis() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_stat_correlations() -> str:
     """Show which stats correlate most strongly with Tyler's score."""
     df = tyler.dropna(subset=["Putts","Fairways","Greens","Score"])
@@ -883,7 +939,7 @@ def get_stat_correlations() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def compare_with_partner(partner: str = "Rich") -> str:
     """Compare Tyler head-to-head with a playing partner on shared rounds."""
     p = rounds_df[rounds_df["Golfer"] == partner].copy()
@@ -904,8 +960,8 @@ def compare_with_partner(partner: str = "Rich") -> str:
 # CHARTS
 # ══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool()
-def chart_club_carry_distribution(club: str) -> str:
+@chart_tool
+def chart_club_carry_distribution(club: str) -> Image:
     """Histogram of carry distance with P25/P75 markers for a specific club."""
     df = tyler_range[tyler_range["Club Type"].str.lower() == club.lower()].copy()
     if df.empty:
@@ -922,11 +978,11 @@ def chart_club_carry_distribution(club: str) -> str:
     ax.axvline(np.percentile(carry, 75), color="#ef9a9a", linewidth=1.5, linestyle=":",
                label=f"P75: {np.percentile(carry, 75):.0f} yds")
     ax.legend(facecolor="#16213e", labelcolor="#cccccc")
-    return f"Chart saved to: {save_chart(fig, f'carry_dist_{club}')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_club_stats_over_time(club: str, stat: str = "Carry Distance") -> str:
+@chart_tool
+def chart_club_stats_over_time(club: str, stat: str = "Carry Distance") -> Image:
     """
     Chart how a club stat has changed across range sessions over time, with SD band.
     stat options: Carry Distance, Ball Speed, Smash Factor, Launch Angle,
@@ -956,11 +1012,11 @@ def chart_club_stats_over_time(club: str, stat: str = "Carry Distance") -> str:
     ax.legend(facecolor="#16213e", labelcolor="#cccccc")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d '%y"))
     plt.xticks(rotation=30)
-    return f"Chart saved to: {save_chart(fig, f'{club}_{stat.replace(chr(32), chr(95))}_trend')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_smash_factor_by_club() -> str:
+@chart_tool
+def chart_smash_factor_by_club() -> Image:
     """Chart avg and Q3 smash factor by club vs tour benchmarks."""
     df = tyler_range.dropna(subset=["Smash Factor"]).copy()
     summary = df.groupby("Club Type")["Smash Factor"].agg(["mean","std"]).reset_index()
@@ -981,11 +1037,11 @@ def chart_smash_factor_by_club() -> str:
     ax.set_xticks(x)
     ax.set_xticklabels(summary["Club Type"])
     ax.legend(facecolor="#16213e", labelcolor="#cccccc", ncol=2)
-    return f"Chart saved to: {save_chart(fig, 'smash_factor_q3')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_all_clubs_carry_comparison() -> str:
+@chart_tool
+def chart_all_clubs_carry_comparison() -> Image:
     """Box plot comparing carry distance distributions across all clubs."""
     df = tyler_range.dropna(subset=["Carry Distance"]).copy()
     present = [c for c in CLUB_ORDER if c in df["Club Type"].values]
@@ -1002,11 +1058,11 @@ def chart_all_clubs_carry_comparison() -> str:
         for item in bp[element]:
             item.set_color("#8888aa")
     plt.xticks(rotation=20)
-    return f"Chart saved to: {save_chart(fig, 'full_bag_boxplot')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_distance_gaps() -> str:
+@chart_tool
+def chart_distance_gaps() -> Image:
     """Visual chart of full bag distance coverage with error bars."""
     rs = tyler_range.groupby("Club Type")["Carry Distance"].agg(["mean","std"]).reset_index()
     rs.columns = ["Club","Avg","Std"]
@@ -1024,11 +1080,11 @@ def chart_distance_gaps() -> str:
     ax.set_xticks(x)
     ax.set_xticklabels(rs["Club"])
     ax.legend(facecolor="#16213e", labelcolor="#cccccc")
-    return f"Chart saved to: {save_chart(fig, 'distance_gaps')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_launch_angle_by_club() -> str:
+@chart_tool
+def chart_launch_angle_by_club() -> Image:
     """Chart Tyler's avg launch angle per club vs ideal benchmarks."""
     ideals = {"d":13,"3w":14,"3h":16,"4i":17,"5i":19,"6i":21,
               "7i":23,"8i":25,"9i":27,"pw":29,"gw":32,"sw":35,"lw":38}
@@ -1045,11 +1101,11 @@ def chart_launch_angle_by_club() -> str:
     ax.set_xticks(x)
     ax.set_xticklabels(summary["Club Type"])
     ax.legend(facecolor="#16213e", labelcolor="#cccccc")
-    return f"Chart saved to: {save_chart(fig, 'launch_angle')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_dispersion_scatter(club: str) -> str:
+@chart_tool
+def chart_dispersion_scatter(club: str) -> Image:
     """
     Shot dispersion scatter plot: side carry (x) vs carry distance (y), colored by smash factor.
     Reveals miss patterns — fade/draw bias, thin/fat tendency.
@@ -1071,11 +1127,11 @@ def chart_dispersion_scatter(club: str) -> str:
     if "Smash Factor" in df.columns:
         plt.colorbar(sc, ax=ax, label="Smash Factor").ax.yaxis.label.set_color("#cccccc")
     ax.legend(facecolor="#16213e", labelcolor="#cccccc")
-    return f"Chart saved to: {save_chart(fig, f'{club}_dispersion')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_club_stats_radar(club: str) -> str:
+@chart_tool
+def chart_club_stats_radar(club: str) -> Image:
     """
     Radar chart comparing Tyler's Trackman metrics for one club vs tour benchmarks.
     Carry, ball speed, smash factor, launch angle, club speed as % of ideal.
@@ -1113,7 +1169,7 @@ def chart_club_stats_radar(club: str) -> str:
     ax.set_title(f"{club.upper()} vs Tour Benchmarks", color="#ffffff", pad=20)
     ax.legend(loc="upper right", facecolor="#16213e", labelcolor="#cccccc")
     ax.grid(color="#2a2a4a")
-    return f"Chart saved to: {save_chart(fig, f'{club}_radar')}"
+    return render_chart(fig)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1172,8 +1228,8 @@ def _simulate_trajectory(ball_speed_mph: float, launch_deg: float,
     return xs_yards, np.array(ys)
 
 
-@mcp.tool()
-def chart_ball_flight_by_club(club: str) -> str:
+@chart_tool
+def chart_ball_flight_by_club(club: str) -> Image:
     """
     Simulate and chart realistic ball flight trajectories for a specific club
     using Tyler's actual Trackman data (ball speed, launch angle, apex, carry).
@@ -1225,11 +1281,11 @@ def chart_ball_flight_by_club(club: str) -> str:
     ax.set_ylim(bottom=0)
     ax.set_xlim(left=0)
     ax.legend(facecolor="#16213e", labelcolor="#cccccc", fontsize=8)
-    return f"Chart saved to: {save_chart(fig, f'{club}_flight_paths')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_full_bag_flight_paths() -> str:
+@chart_tool
+def chart_full_bag_flight_paths() -> list[Image | str]:
     """
     Overlay simulated ball flight trajectories for every club in Tyler's bag
     on a single chart, using avg Trackman data per club.
@@ -1273,11 +1329,11 @@ def chart_full_bag_flight_paths() -> str:
               ncol=2, loc="upper left")
 
     info = "\n".join(plotted)
-    return f"Chart saved to: {save_chart(fig, 'full_bag_flights')}\n\n{info}"
+    return [render_chart(fig), info]
 
 
-@mcp.tool()
-def chart_launch_angle_vs_distance() -> str:
+@chart_tool
+def chart_launch_angle_vs_distance() -> Image:
     """
     Scatter plot of individual shots: launch angle (x) vs carry distance (y),
     colored by ball speed. Shows the sweet spot launch window for each club
@@ -1312,10 +1368,10 @@ def chart_launch_angle_vs_distance() -> str:
         ax.set_ylabel("Carry (yds)", fontsize=7)
 
     plt.tight_layout()
-    return f"Chart saved to: {save_chart(fig, 'launch_vs_distance')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_launch_angle_report() -> str:
     """
     Textual report of Tyler's launch angle stats vs optimal windows per club.
@@ -1355,8 +1411,8 @@ def get_launch_angle_report() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
-def chart_shot_shape_profile(club: str) -> str:
+@chart_tool
+def chart_shot_shape_profile(club: str) -> Image:
     """
     Combined 2-panel chart for a club:
     - Top panel: simulated flight paths for every individual shot (faded),
@@ -1415,7 +1471,7 @@ def chart_shot_shape_profile(club: str) -> str:
     ax2.tick_params(colors="#cccccc", labelsize=8)
 
     plt.tight_layout()
-    return f"Chart saved to: {save_chart(fig, f'{club}_shot_shape')}"
+    return render_chart(fig)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1616,7 +1672,7 @@ def _fitting_verdict(actual_la, optimal_la, la_tol=1.5,
     return overall, grades, issues, recs
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_driver_fitting_report() -> str:
     """
     Full club-fitter style report for Tyler's driver using the TrackMan optimal
@@ -1702,7 +1758,7 @@ def get_driver_fitting_report() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(structured_output=False)
 def get_full_bag_fitting_report() -> str:
     """
     Full bag fitting report — every club assessed like a TrackMan fitter would.
@@ -1797,8 +1853,8 @@ def get_full_bag_fitting_report() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
-def chart_fitting_overview() -> str:
+@chart_tool
+def chart_fitting_overview() -> Image:
     """
     Visual fitting dashboard: for each club, plots actual launch angle vs
     the optimal window as a colour-coded bar chart, plus a smash factor
@@ -1892,11 +1948,11 @@ def chart_fitting_overview() -> str:
                   color="#cccccc", fontsize=9, pad=4)
 
     plt.tight_layout(rect=[0, 0, 1, 0.97])
-    return f"Chart saved to: {save_chart(fig, 'fitting_overview')}"
+    return render_chart(fig)
 
 
-@mcp.tool()
-def chart_driver_launch_matrix() -> str:
+@chart_tool
+def chart_driver_launch_matrix() -> Image:
     """
     Render the TrackMan optimal launch/spin matrix as a heatmap with Tyler's
     actual ball speed and estimated angle of attack plotted as a crosshair.
@@ -1952,8 +2008,47 @@ def chart_driver_launch_matrix() -> str:
     ax.set_yticklabels([f"{s} mph" for s in speeds], fontsize=8)
     ax.legend(facecolor="#16213e", labelcolor="#cccccc", fontsize=9)
 
-    return f"Chart saved to: {save_chart(fig, 'driver_launch_matrix')}"
+    return render_chart(fig)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ENTRYPOINT
+# ══════════════════════════════════════════════════════════════════════════════
+
+@mcp.custom_route("/health", methods=["GET"])
+async def health(_request):
+    """Unauthenticated liveness probe, so a failing host check is distinguishable
+    from a rejected token."""
+    from starlette.responses import JSONResponse
+    return JSONResponse({"status": "ok", "rounds": len(tyler), "tools": 54})
+
+
+def build_http_app():
+    """Streamable HTTP app, bearer-guarded except for /health."""
+    if not MCP_AUTH_TOKEN:
+        raise SystemExit(
+            "MCP_AUTH_TOKEN is not set. HTTP mode publishes every tool to whoever "
+            "reaches the port, so it refuses to start without a token.\n"
+            "  Generate one:  python -c \"import secrets; print(secrets.token_urlsafe(32))\""
+        )
+    # stateless_http keeps every request self-contained, so any instance can serve any
+    # request. The data is read-only and loaded at import, so there is no per-connection
+    # state to lose. Without it the server rejects everything with "Missing session ID".
+    app = mcp.streamable_http_app(stateless_http=True)
+    unguarded = app.router  # /health is matched before the token check below
+    guarded = BearerAuthMiddleware(app, MCP_AUTH_TOKEN)
+
+    async def route(scope, receive, send):
+        if scope["type"] == "http" and scope.get("path") == "/health":
+            return await unguarded(scope, receive, send)
+        return await guarded(scope, receive, send)
+
+    return route
 
 
 if __name__ == "__main__":
-    mcp.run()
+    if os.environ.get("PORT") or os.environ.get("MCP_PORT"):
+        import uvicorn
+        uvicorn.run(build_http_app(), host=_http_host, port=_http_port)
+    else:
+        mcp.run()

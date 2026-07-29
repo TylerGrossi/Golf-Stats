@@ -11,7 +11,7 @@ executing notebook cells or starting the MCP server.
 
 ```
 paths.py                    Single source of truth for data locations — import it, never hardcode
-golf_mcp.py                 MCP server, ~60 @mcp.tool() functions
+golf_mcp.py                 MCP server (SDK v2), 54 tools
 notebooks/
   Golf Analytics.ipynb      Builds everything in data/derived/
 data/
@@ -109,24 +109,41 @@ CSV, and can be skipped.
 
 ## golf_mcp.py
 
-Single 1,955-line module. Structure:
+Single ~2,050-line module built on **MCP Python SDK v2** (`mcp.server.mcpserver.MCPServer`),
+which implements spec revision `2026-07-28`. Sections are marked by `── banner ──` comments,
+in this order:
 
-- **Lines 20–49 — load & slice.** All workbooks are read at *import time* into module globals,
-  then filtered to `Golfer == "Tyler"` into `tyler`, `tyler_sg`, `tyler_clutch`, `tyler_range`,
-  `tyler_putts`, `tyler_hcap`, `tyler_raps`. Data changes require a restart.
-- **Lines 55–76 — chart helpers.** `save_chart()` writes PNGs to a `tempfile.mkdtemp()`
-  directory and tools return the path as a string. `style_ax()` applies the dark theme
-  (`#1a1a2e` figure, `#16213e` axes).
-- **Lines 78+ — tools**, grouped by banner comment: scoring, handicap, range/launch-monitor
-  stats, club gapping, strokes gained, putting, course breakdowns, clutch, charts, ball-flight
-  simulation, and club fitting.
+- **Server config.** `MCPServer` takes no host/port — transport is chosen in the entrypoint at
+  the bottom. `BearerAuthMiddleware` lives here too: raw ASGI, not `BaseHTTPMiddleware`, which
+  would buffer the response body and break the Streamable HTTP stream.
+- **Load all data / Tyler slices.** All workbooks are read at *import time* into module
+  globals, then filtered to `Golfer == "Tyler"` into `tyler`, `tyler_sg`, `tyler_clutch`,
+  `tyler_range`, `tyler_putts`, `tyler_hcap`, `tyler_raps`. Data changes require a restart.
+- **Chart helpers.** `render_chart()` renders a figure to an inline base64 PNG at `CHART_DPI`.
+  `style_ax()` applies the dark theme (`#1a1a2e` figure, `#16213e` axes). `chart_tool`
+  registers a chart tool and serializes it on `_PYPLOT_LOCK` — see the notes below.
+- **Tools**, grouped by banner comment: scoring, handicap, range/launch-monitor stats, club
+  gapping, strokes gained, putting, course breakdowns, clutch, charts, ball-flight simulation,
+  and club fitting.
+- **Entrypoint.** `/health` route, `build_http_app()`, and the stdio/HTTP switch.
 
 Conventions to match when adding a tool:
 
-- Decorate with `@mcp.tool()`, return `str`, and give it a docstring — the docstring is what
-  Claude sees when choosing tools.
+- Decorate with `@mcp.tool(structured_output=False)`, return `str`, and give it a docstring —
+  the docstring is what Claude sees when choosing tools. **The `structured_output=False` is
+  load-bearing**: v2 auto-derives an output schema from the `-> str` annotation and then sends
+  the return value twice, once as text content and once as an identical `structuredContent`
+  blob. Drop the flag only when giving a tool a *real* schema worth the second copy.
 - Return pandas frames via `.to_string(index=False)`, not `.to_markdown()` or raw repr.
-- Chart tools return `f"Chart saved to: {save_chart(fig, 'name')}"`.
+- Chart tools use `@chart_tool` (not `@mcp.tool`), annotate `-> Image`, and `return
+  render_chart(fig)` — which renders to an inline base64 PNG. **Never return a file path**:
+  that only worked when the client shared a disk with the server, and breaks the moment the
+  server is remote. To send a chart *and* text, return a list (`[render_chart(fig), info]`),
+  which the SDK flattens into separate content blocks.
+- `@chart_tool` also holds `_PYPLOT_LOCK` for the whole tool body. v2 runs sync tool functions
+  on worker threads, and pyplot's current-figure state (`plt.subplots`, `plt.xticks`) is
+  process-global, so concurrent chart calls would otherwise draw into each other's figures.
+  Non-chart tools are pure pandas and need no lock.
 - Club identifiers are lowercase and follow `CLUB_ORDER`
   (`lw - 30`, `lw - 50`, `lw`, `sw`, `gw`, `pw`, `9i`…`4i`, `3h`, `3w`, `d`).
 - Read from the `tyler_*` slices, not the raw frames, unless the tool is explicitly a
@@ -134,12 +151,46 @@ Conventions to match when adding a tool:
 
 ### Running it
 
+The server needs the repo venv — the global 3.14 install still has SDK v1, which has no
+`mcp.server.mcpserver` and fails at import. `.mcp.json` already points at `.venv`.
+
 ```powershell
-python golf_mcp.py                       # stdio, 127.0.0.1:8000
+.venv\Scripts\python.exe -X utf8 golf_mcp.py       # stdio (local Claude clients)
+$env:PORT=8000; .venv\Scripts\python.exe golf_mcp.py   # Streamable HTTP, 0.0.0.0:8000
 ```
 
-`PORT` / `FASTMCP_HOST` / `FASTMCP_PORT` control the HTTP binding; setting `PORT` flips the
-host to `0.0.0.0`.
+Setting `PORT` (or `MCP_PORT`) switches the transport to Streamable HTTP; `PORT` alone also
+flips the bind address to `0.0.0.0` for container hosts. `MCP_HOST` overrides the address.
+HTTP mode runs `stateless_http=True` — without it the server rejects every request with
+"Missing session ID", and with it any instance can serve any request, which is what makes
+the server deployable behind a load balancer or on serverless.
+
+HTTP mode also **refuses to start without `MCP_AUTH_TOKEN`**, because it publishes all 54
+tools to anyone who can reach the port. Requests must carry `Authorization: Bearer <token>`;
+`/health` is deliberately exempt so a failing host check reads differently from a bad token.
+The token must never go in the URL — the spec forbids credentials in query strings.
+
+### Deploying it
+
+`Dockerfile` + `fly.toml` deploy to Fly.io. The dataset is under 1 MB and committed, so it is
+baked into the image — no volume, no database. The tradeoff: **re-running the notebook means
+redeploying**, otherwise the deployed server keeps serving the data from its last build.
+
+```powershell
+fly launch --no-deploy --copy-config            # claims the app name, keeps fly.toml
+fly secrets set MCP_AUTH_TOKEN=$(python -c "import secrets;print(secrets.token_urlsafe(32))")
+fly deploy                                      # builds remotely; local Docker not required
+```
+
+Then add `https://<app>.fly.dev/mcp` in Claude → Settings → Connectors → Add custom connector,
+with the token as an `Authorization: Bearer <token>` header. That URL works from web, desktop,
+and mobile. Anthropic reaches the server from its own IP ranges, so it must stay publicly
+routable — a private network or VPN will not connect.
+
+Measured facts worth not re-deriving: image is ~780 MB, resident memory is 170 MB idle and
+194 MB peak across the heaviest charts, hence `memory = "512mb"` in `fly.toml`. `CHART_DPI`
+(default 110) trades chart payload size against sharpness; charts run 40–300 KB raw and travel
+base64-encoded, which costs a third more again.
 
 ## Data
 

@@ -1,0 +1,40 @@
+# Fly.io config for the Golf Analytics MCP server.
+#   fly launch --no-deploy --copy-config     # claims the app name, keeps this file
+#   fly secrets set MCP_AUTH_TOKEN=...       # required; server won't boot without it
+#   fly deploy
+#
+# `app` is claimed on first launch and must be globally unique — if the name is taken,
+# change it here and in the connector URL.
+app = "golf-analytics-mcp"
+primary_region = "ewr"                       # Newark: closest region to Long Island
+
+[build]
+
+[env]
+  # Only PORT matters for behaviour: its presence is what switches golf_mcp.py from
+  # stdio to Streamable HTTP. MCP_AUTH_TOKEN is a secret and is NOT set here.
+  PORT = "8080"
+  CHART_DPI = "110"
+
+[http_service]
+  internal_port = 8080
+  force_https = true                         # Claude requires a public HTTPS endpoint
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 0                   # scale to zero between rounds; wakes on request
+
+  [[http_service.checks]]
+    # /health is exempt from the bearer check on purpose, so a red health check means
+    # the process is down rather than the token being wrong.
+    path = "/health"
+    method = "GET"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "20s"
+
+[[vm]]
+  # Measured in the container: 170 MB resident at rest, 194 MB peak after rendering the
+  # three heaviest charts back to back. 512 MB leaves better than 2x headroom.
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1

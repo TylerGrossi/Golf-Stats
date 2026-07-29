@@ -1,0 +1,7 @@
+# Everything the MCP server needs, plus the notebook-only extras.
+#   pip install -r requirements-notebook.txt
+# Kept separate from requirements.txt so the container image does not carry
+# scikit-learn, which only the exploratory Feature Importances cells use.
+-r requirements.txt
+
+scikit-learn==1.8.0

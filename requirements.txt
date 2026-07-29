@@ -1,12 +1,14 @@
 # Pinned to the versions this project is actually running on (Python 3.14).
 # MCP server (golf_mcp.py)
-fastmcp==3.2.4
-mcp==1.27.0
+# SDK v2 — implements MCP spec 2026-07-28. `pip install mcp` now resolves to 2.x,
+# so the upper bound is what keeps a v3 from silently breaking the server later.
+# (fastmcp was listed here but nothing imported it, and it pins mcp<2.0 — dropped.)
+# This file is what the container image installs, so it is server deps only —
+# notebook extras live in requirements-notebook.txt. uvicorn and starlette arrive
+# as dependencies of mcp and are deliberately not repinned here.
+mcp>=2.0.0,<3
 pandas==2.3.3
 numpy==2.4.1
 matplotlib==3.10.8
 openpyxl==3.1.5
 scipy==1.17.0
-
-# Notebook only (Golf Analytics.ipynb)
-scikit-learn==1.8.0

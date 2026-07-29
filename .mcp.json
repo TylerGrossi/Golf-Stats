@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "golf": {
-      "command": "C:\\Python314\\python.exe",
+      "command": "C:\\Users\\Owner\\Desktop\\Tyler\\OneDrive\\Projects\\Golf Stats\\.venv\\Scripts\\python.exe",
       "args": [
         "-X",
         "utf8",
